@@ -54,11 +54,12 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
 @media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
 /* task */
 .task{background:var(--surface);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);
-  margin-bottom:12px;cursor:pointer;border-left:4px solid var(--sep2);transition:.15s}
+  margin-bottom:12px;border-left:4px solid var(--sep2);transition:.15s}
 .task:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,42,34,.1)}
 .task.p-高{border-left-color:var(--red)}
 .task.p-中{border-left-color:var(--orange)}
 .task.p-低{border-left-color:var(--accent)}
+.task.done{opacity:.55;border-left-color:var(--accent)}
 .task h3{font-size:15.5px;margin-bottom:6px}
 .task .meta{font-size:12.5px;color:var(--label3);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
 .task .meta b{color:var(--label2);font-weight:500}
@@ -68,6 +69,13 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
 .pill.blue{background:var(--blue-soft);color:var(--blue)}
 .pill.green{background:var(--accent-soft);color:#41694A}
 .due-soon{color:var(--red)!important;font-weight:600}
+/* check-off */
+.check-bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.chk{font-size:12.5px;padding:5px 14px;border-radius:8px;border:1.5px solid var(--sep2);
+  color:var(--label3);cursor:pointer;transition:.15s;user-select:none}
+.chk:hover{border-color:var(--accent);color:var(--accent)}
+.chk.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.chk.on-orange{background:var(--orange);border-color:var(--orange);color:#fff}
 /* kanban */
 .kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
 @media(max-width:900px){.kanban{grid-template-columns:1fr}}
@@ -88,10 +96,12 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
 .cal-day.out{opacity:.35}
 .cal-day.today{background:var(--accent-soft);border-color:var(--accent)}
 .cal-day .n{font-size:12px;color:var(--label3)}
-.cal-day .dot{display:block;height:4px;border-radius:2px;background:var(--accent);margin-top:4px;font-size:11px;
-  color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 5px;height:auto;line-height:1.3}
+.cal-day .dot{display:block;margin-top:4px;font-size:11px;
+  color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 5px;
+  height:auto;line-height:1.3;border-radius:4px}
 .cal-day .dot.high{background:#F1D3D0}
 .cal-day .dot.mid{background:#F3E3CF}
+.cal-day .dot.low{background:#DDE8D8}
 /* detail */
 #detail{position:fixed;inset:0;z-index:90;background:rgba(20,26,21,.45);display:none;
   align-items:center;justify-content:center;padding:20px}
@@ -103,8 +113,6 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
 .field .v{font-size:14.5px;white-space:pre-wrap}
 .close{float:right;color:var(--label3);font-size:20px;line-height:1}
 .empty{color:var(--label3);text-align:center;padding:36px;font-size:13.5px}
-.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
-select{padding:8px 30px 8px 12px;border-radius:9px;border:1px solid var(--sep2);background:#fff;font-size:13.5px;outline:none}
 .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
 @media(max-width:700px){.stat-row{grid-template-columns:repeat(2,1fr)}}
 .stat{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
@@ -141,18 +149,15 @@ select{padding:8px 30px 8px 12px;border-radius:9px;border:1px solid var(--sep2);
     <div class="who"><span id="who-txt"></span><button class="out" id="btn-out">退出</button></div>
   </header>
   <main>
-    <div id="printTitle" style="display:none"></div>
     <section id="v-mine"></section>
     <section id="v-all" hidden></section>
     <section id="v-cal" hidden></section>
   </main>
 </div>
 
-<div id="detail">
-  <div class="detail-box" id="detail-box"></div>
-</div>
+<div id="detail"><div class="detail-box" id="detail-box"></div></div>
 
-<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-班长","iv":"dAdJtQpU9r7OiKfE","ct":"8fOpCMaF52KaNnnk2dzKnALHMjhvilIF9/xbDjOtoYMpeJqUOVHPxeeuqhInMN+Q"},{"id":"研旅261-副班长","iv":"kPST51M91RFPtj0N","ct":"+Dqk05Pyy6YdHOYLRd1hnstcxXQfRbc4SUlylEoKTQVX3+lGNV/2hPh9I9ROU1ao"},{"id":"研旅261-团支书","iv":"XoDodSQyERHBnNuV","ct":"3s6fuAw76XIdVItqrxDdMcOsg+CywVVRFscAhJWbKE0Uvt0VuXWnt5+2ONqV+wzL"},{"id":"研旅261-学习委员","iv":"gNNykcG9n4X+My9Q","ct":"uNlt2PDidQ26isAwlUWQbGvt0vl4vxKhGAeSvCdtgLjGSSMZAY2aNd8wlBGr7KNK"},{"id":"研旅261-生活委员","iv":"0nDTSKPJds3fTs01","ct":"1vW+Qfcus0IGFtcxUHJWiPHqlcqoqrpjPfPSaEP1renPsj5O3m49QuIgN0L4D3oi"},{"id":"研旅261-文体委员","iv":"7rQGfQfM5YC8VsPk","ct":"GHOZSCZ0XbXJ/c84x7AtoPkpZ6wrRnyCXtYilfimSudpYP1QUf7gMQuPAkRMOweQ"},{"id":"研旅261-心理委员","iv":"/Q9rAZ8LM4d9JWei","ct":"V/GGj3I+0uEZEwjazQzgdgRBGaXt625lVhyMm6paZ9PFqqcsRH9UFYQCXS7FuruR"},{"id":"研旅261-宣传委员","iv":"5f62OYNDo0ZpvxOy","ct":"D7Le1tDvOJlrTuLeXu322ljNxTyvOfXVUBusxDEvNI7+Zu24zis/PXaz2RqlMCgx"},{"id":"营销261-班长","iv":"IyL/Xd8gk9ruWaYu","ct":"thLkRTcPD01+n1XLOuF9ltPloKO7g72bnOIzBp0yZ17TJJq6f4Q/DBBwrZuCKHkc"},{"id":"营销261-副班长","iv":"CF69UTGxI6XADd7+","ct":"tcMQ7dQPiLQXKTomSiFOonmkxNR3VKnh50XV0HkfaSNfyvorsw5hut/Ne5x9OQ+U"},{"id":"营销261-团支书","iv":"s9DrUGSRH+udrEOc","ct":"03KxWsTQravKkitGbdUhP5IbD2jCGJ4DEDjgZZtfHTRJPa9ftn3LxPpQxQWmBPwJ"},{"id":"营销261-学习委员","iv":"QogbxKS18hL8/kxS","ct":"PV8z4qEPg+ToalB5pvK1xIFSE4QME4FOwhnaBN5g1VH260GjhlWcpdK5JtEglwjd"},{"id":"营销261-生活委员","iv":"SZqkTiRyEO1Ora3N","ct":"x+fRJbKzzPjb7MN7tdW7YOmTIiT9UJHqvKzKBM2CqRjY2lk/65ZeoJIrna7TsRv8"},{"id":"营销261-文体委员","iv":"CraixR5I86aPbPFl","ct":"egD+/k/rLRpgjwU/qH6XVvawxP2VkknCWEDSQ8ON64pM7q5RUs953wlA4y10D6YZ"},{"id":"营销261-心理委员","iv":"gJlwW1BbW/Atz3Rn","ct":"fDZjVbG/CFcwnB3l2kkCJ3JSZZaN8WGeeqTAHulqetkg5XhDAOwGl2Xvv7MEH7fA"},{"id":"营销261-宣传委员","iv":"yd2gKQCvaDi+XTy3","ct":"LyaaL1RtCUJyn2lBK0/ZHbopfEEXalT2dFKN3npbPRnu0gvh8fqgPQ7UAgkgIbKd"},{"id":"营销262-班长","iv":"VrwDkrOgJlhF6JcP","ct":"C4MTNYp6hqVhQUpe9qpVzP49FKbanQAAJRNA6d6ciVboMvUtNhMTzXjnsX0oei7n"},{"id":"营销262-副班长","iv":"hTt6g6c5TjldWBGa","ct":"LNng5OHZ2sIA6n1RsZf++cc5vsEIjWda3/YfnB6O6cg/1zYliLrqKaertEGo79Ph"},{"id":"营销262-团支书","iv":"1aCHzQbSMnaN/pQe","ct":"PldP8Jy8H66C/eUhKmQ+sxDLRr6GTZeHBtZOfZxPxCFIkIZH6AYU8Vun4L0Ntnw0"},{"id":"营销262-学习委员","iv":"MYFM8QHLGQbJwx5A","ct":"mWgoJ5MxB/8T2O4/iJAdikb4JT8ANW9rei1uP26ZPM+NJ1A7YVZ+7dTB4npEWfFw"},{"id":"营销262-生活委员","iv":"mdiaEJNADOyPbqCK","ct":"9bB9AWXF2LXW7GDT5LrKyyaiR+wlNT/02aGtlyFqED2do1HsWpNfRKQR5VP0p1su"},{"id":"营销262-文体委员","iv":"np67gAuUwQi8fvZL","ct":"uYO6HnaYhTjZAYpbZArD7CoSCG+iWn31pRGXPYy4bL2DBhAH9eM2cszQkjgga+jl"},{"id":"营销262-心理委员","iv":"aKAPOCVaA2iu457L","ct":"nrAOAvXDdz4YRPwNBHJtOHnhw51gSR49zIhBkgCJuwvrnlq82yX+2TTzdfH4v7Ui"},{"id":"营销262-宣传委员","iv":"ck1dVgngw0eWUsEP","ct":"p+C2UAEvX5c2kTTHr8kv5Tj4UWC1PfCq3Rk6lDNMXwRM9lsWwC2Gl4itlKyyuKQV"}],"iv":"PjiPtUjl4lD2Ee54","ct":"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"};</script>
+<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-班长","iv":"fIUBKAIbyOkkFHyh","ct":"4IcAdO0fw4Q3Y6jBOpDZLPFmxXRpBFsDUaamVFdQifyTSE0J086T+V8xl55UqfVG"},{"id":"研旅261-副班长","iv":"aeU8LVTnhse7pZTS","ct":"7rpWxFPhZGz43V/cQfJth+zdomybVp+SSp2zczbL5yeFgjXFFdbqaagyCqH3keHj"},{"id":"研旅261-团支书","iv":"uJPiwy8beD+f7+UA","ct":"6pragSAqEqxMgEbUCwW0rQo1s8xwEUBorq/OfXrwUlJdZemVwDY+qO9mkksCiBr9"},{"id":"研旅261-学习委员","iv":"6krdo1iUaXWRsy9c","ct":"Wjw7J5tOo0RBNN/0Osn3UAot2W/66P/lDORzbZgztIEHiR6JOuA7b6CbXRfuxcv6"},{"id":"研旅261-生活委员","iv":"b8N9rqHPajvnNsX4","ct":"l+BPW+BOdC9CKp7oqiaqlwfQaZo4MMpI7X+jT92FmXtcsrzSjc+t87RUuXMlWkLa"},{"id":"研旅261-文体委员","iv":"vqsHjyCQfbCijMKB","ct":"HT0E/v8dvQPfjLac/5oVIIE5Y3pRD2cxqGow4DRdWTX9mfy+PwbVdR1wj6+TlYO4"},{"id":"研旅261-心理委员","iv":"Tk1Nhh1C61zc9EBE","ct":"gJjS2iFGiq7p0gnLpGJfgICM0H9BPZ9+T8bGMxbUodFLcFBL8qXI22pVckM3GfIj"},{"id":"研旅261-宣传委员","iv":"U9EOfqxDSvtkCjaj","ct":"d3ZPQOExEvA/sTq62MlkTGAC3bBZo1gBTUKeQIBjsQf2/GTz/4wVFHZv1/LVOfsz"},{"id":"营销261-班长","iv":"UVnYikzQPakACsQd","ct":"yPcy2yGTg15ekmG7rBj5RYO/Yg4EyQlddx7H2CQSia5BhQG1SCY3W9u28uAVeby+"},{"id":"营销261-副班长","iv":"W24u9GN5I5jRwkbH","ct":"f0hjKatp2UsXzMBrDMw4hywWalg7bqz99XTuhToSMX0GvJekOIhAoBaTN1Kj5Tv+"},{"id":"营销261-团支书","iv":"1Sv3WbIiDl1XEF5m","ct":"mTmhXRCau4DmH7XTZSC5BUeGJpRDtLHJlpI5KYzwRFlTUvV+GyeOn/isEgwa1Cxy"},{"id":"营销261-学习委员","iv":"IkcNrB7XQKsyKUIX","ct":"ysCrmuATEo0Zh1xS6F1YWHGwTEPZwMkBat2zqlwISv2dU5EkF4y//q6T2uXPZygA"},{"id":"营销261-生活委员","iv":"1IqsqRn45luUdZpB","ct":"IqkaY9gRVVaEQVTs/UL0hURGv37volKpdRcsgJy/Kl694OdF/55xuXMl4H6/Pa11"},{"id":"营销261-文体委员","iv":"LmJEeUZX3t0MYoR0","ct":"kuEdbGRQfIeIoC0kmKXFwCv88A2Gai3yYEoSP9WJVOd60Nv2v/2Uv4R4wmSa9jxF"},{"id":"营销261-心理委员","iv":"r0UtuFOmdU1xFMf2","ct":"z+l2DB9cw9utktDJPzP9xCcnRDGMjnhTLoKY0nZyI8LEMET9KmBn1hNyGGT+V3gc"},{"id":"营销261-宣传委员","iv":"Phx/+BRtrRuvnIkk","ct":"cVZAHRln7mI7t8jExL0l+CRJqVjBmVi6mlrbyDF2yNRwruU9869A8rZNA30HxFs1"},{"id":"营销262-班长","iv":"jOd7JjC0nUsCLJ8c","ct":"eYdECHBtb3zgTT22PqjWyAlRLTqiYBE5OIhRzfGCgxvrJveaefOSZBWivJvk2HoT"},{"id":"营销262-副班长","iv":"iSxotK6jZE9y25/d","ct":"JzEPA7AIBYreaF587NxmIpAVEDb0WopnQZxqBl4kWwFcqd1yHf+XeL1LTABmjIQY"},{"id":"营销262-团支书","iv":"CLE/u5AO70Bjd0PU","ct":"ofKHlgHWrbq196jtHWpG5DPnuoaPq/5ctOAnsJbIF1oOy9bhs3onraEZZzsADWRx"},{"id":"营销262-学习委员","iv":"JTnTNg2Vf2fq/Cjv","ct":"dhf6BqEHscPhG4kjwW2vahiix17HngTFRhwL9N98XJH0KRAL1YpikoKNDooR6J1O"},{"id":"营销262-生活委员","iv":"VmR9/jZCFRDrPYLt","ct":"ZxRSmdp/v1HiD0R7g4DHMf/HpIvF+6tp1ZOuBI/nUDvAeoIy4igzPb3HvYxNQvbK"},{"id":"营销262-文体委员","iv":"EdNscutNi0CsJ8yz","ct":"9gSgVXh6sGdWGWTpnSOdds7a04lV6VQC8b1KPw9R9EHXs7xL7BTqOpnbM+ni4+is"},{"id":"营销262-心理委员","iv":"UW1kjhOrpWjXWuDm","ct":"wivBv3l71UgzPHkE8FHQDZV6zGyCXLtXVzkUQ61b8X9FIu0HTmNeiGYQrycBTIuo"},{"id":"营销262-宣传委员","iv":"jgnkYdAdhD/CKw3O","ct":"XxVlNJxTFH3pCnqO+yXIrjH/vxWJToZJRPP1wyYvrUbi9E25RxDteq+eylGHekZf"}],"iv":"x4oz4pd8k6GwiT0l","ct":"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"};</script>
 <script>
 "use strict";
 let DATA = null, ME = null;
@@ -160,13 +165,25 @@ const $ = (s,r=document)=>r.querySelector(s);
 const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
 const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const b64d = s => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
-const dstr = d => d ? d.toISOString().slice(0,10) : '';
-const today = () => { const d = new Date(); return dstr(d); };
+const today = () => new Date().toISOString().slice(0,10);
 const daysLeft = due => {
   if(!due) return null;
-  const a = new Date(due+'T00:00:00'), b = new Date(today()+'T00:00:00');
-  return Math.round((a-b)/86400000);
+  return Math.round((new Date(due+'T00:00:00') - new Date(today()+'T00:00:00'))/86400000);
 };
+
+/* ---------- 勾选状态（localStorage） ---------- */
+function myState(taskId){
+  const key = 'kb_done_' + ME + '_' + taskId;
+  return localStorage.getItem(key) || '';
+}
+function setMyState(taskId, val){
+  const key = 'kb_done_' + ME + '_' + taskId;
+  if(val) localStorage.setItem(key, val);
+  else localStorage.removeItem(key);
+}
+function isDoneByMe(t){
+  return myState(t.id) === 'done' || myState(t.id) === 'submitted';
+}
 
 /* ---------- 解密 ---------- */
 async function unlock(pwd){
@@ -182,7 +199,7 @@ async function unlock(pwd){
       const k = await crypto.subtle.importKey('raw', rawK, 'AES-GCM', false, ['decrypt']);
       const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(B.iv)}, k, b64d(B.ct));
       return { me: s.id, data: JSON.parse(new TextDecoder().decode(pt)) };
-    }catch(e){ /* 换下一个 */ }
+    }catch(e){}
   }
   throw new Error('bad');
 }
@@ -208,20 +225,23 @@ $('#btn-out').onclick = ()=> location.reload();
 
 /* ---------- 工具 ---------- */
 function personOf(id){ return (DATA.people||[]).find(p=>p.id===id); }
-function ownerLabel(t){
-  if(t.owners.includes('全体')) return '全体班委';
-  return t.owners.map(o=>{
-    const p = personOf(o);
-    if(!p) return o;
-    return p.name ? `${p.name}（${p.class}·${p.role}）` : `${p.class}·${p.role}`;
+function myRole(){
+  const p = personOf(ME);
+  return p ? p.role : '';
+}
+function roleLabel(t){
+  if(t.roles.includes('全体')) return '全体班委';
+  return t.roles.map(r=>{
+    const same = (DATA.people||[]).filter(p=>p.role===r);
+    const names = same.filter(p=>p.name).map(p=>p.name);
+    return names.length ? `${r}（${names.join('、')}）` : r;
   }).join('、');
 }
 function isMine(t){
-  if(t.owners.includes('全体')) return true;
-  return t.owners.includes(ME);
+  if(t.roles.includes('全体')) return true;
+  return t.roles.includes(myRole());
 }
 const STATUS = ['待办','进行中','已完成'];
-const PRIO = {'高':1,'中':2,'低':3};
 
 /* ---------- 路由 ---------- */
 function show(v){
@@ -249,49 +269,75 @@ function renderMine(){
   const all = DATA.tasks;
   const mine = all.filter(isMine);
   const todo = mine.filter(t=>t.status!=='已完成');
-  const high = todo.filter(t=>t.priority==='高').length;
-  const soon = todo.filter(t=>{ const d=daysLeft(t.due); return d!==null && d<=3 && d>=0; }).length;
-  const done = mine.filter(t=>t.status==='已完成').length;
+  const done = mine.filter(t=>t.status==='已完成' || isDoneByMe(t));
+  const myDone = mine.filter(t=>isDoneByMe(t)).length;
+  const high = todo.filter(t=>t.priority==='高' && !isDoneByMe(t)).length;
+  const soon = todo.filter(t=>{ const d=daysLeft(t.due); return d!==null && d<=3 && d>=0 && !isDoneByMe(t); }).length;
 
   $('#v-mine').innerHTML = `
     <div class="page-head">
       <h1>我的任务</h1>
-      <p>更新于 ${esc(DATA.updated)} · 共 ${mine.length} 项分配给你</p>
+      <p>更新于 ${esc(DATA.updated)} · 岗位「${esc(myRole())}」 · 共 ${mine.length} 项</p>
     </div>
     <div class="stat-row">
-      <div class="stat"><div class="k">未完成</div><div class="v">${todo.length}</div></div>
+      <div class="stat"><div class="k">待完成</div><div class="v">${todo.filter(t=>!isDoneByMe(t)).length}</div></div>
       <div class="stat"><div class="k">高优先级</div><div class="v" style="color:var(--red)">${high}</div></div>
       <div class="stat"><div class="k">3 天内截止</div><div class="v" style="color:var(--orange)">${soon}</div></div>
-      <div class="stat"><div class="k">已完成</div><div class="v" style="color:var(--accent)">${done}</div></div>
+      <div class="stat"><div class="k">我已完成</div><div class="v" style="color:var(--accent)">${myDone}</div></div>
     </div>
-    ${todo.length ? todo.map(taskCard).join('') : '<div class="card"><div class="empty">暂时没有分配给你的任务</div></div>'}
-    ${done ? `<div class="page-head" style="margin-top:24px"><h1 style="font-size:17px">已完成</h1></div>` + done.map(taskCard).join('') : ''}
+    ${mine.length ? mine.map(t=>taskCard(t, true)).join('') : '<div class="card"><div class="empty">暂时没有分配给你岗位的任务</div></div>'}
   `;
   bindCards();
 }
 
-function taskCard(t){
+function taskCard(t, showCheck){
   const d = daysLeft(t.due);
+  const myDone = isDoneByMe(t);
   let dueHtml = t.due ? esc(t.due) : '未设';
-  if(t.status !== '已完成' && d !== null){
+  if(t.status !== '已完成' && d !== null && !myDone){
     if(d < 0) dueHtml = `<span class="due-soon">已逾期 ${-d} 天</span>`;
     else if(d === 0) dueHtml = `<span class="due-soon">今天截止</span>`;
     else if(d <= 3) dueHtml = `<span class="due-soon">${dueHtml}（还剩 ${d} 天）</span>`;
   }
-  return `<div class="task p-${esc(t.priority||'低')}" data-id="${esc(t.id)}">
-    <h3>${esc(t.title)}</h3>
+  const state = myState(t.id);
+  return `<div class="task p-${esc(t.priority||'低')} ${myDone?'done':''}" data-id="${esc(t.id)}">
+    <h3>${myDone?'✓ ':''}${esc(t.title)}</h3>
     <div class="meta">
       <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority||'低')}</span>
       <span class="pill blue">${esc(t.dept||'—')}</span>
       <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
       <span>截止：${dueHtml}</span>
-      ${t.status!=='已完成' ? `<span>负责：${esc(ownerLabel(t))}</span>` : ''}
+      <span>负责：${esc(roleLabel(t))}</span>
     </div>
+    ${showCheck ? `<div class="check-bar">
+      <span class="chk ${state==='done'?'on':''}" data-tid="${esc(t.id)}" data-act="done">✓ 我已完成</span>
+      <span class="chk ${state==='submitted'?'on-orange':''}" data-tid="${esc(t.id)}" data-act="submitted">已提交辅导员</span>
+      ${state?`<span class="chk" data-tid="${esc(t.id)}" data-act="clear">撤销</span>`:''}
+    </div>` : ''}
   </div>`;
 }
 
 function bindCards(){
-  $$('.task').forEach(el=> el.onclick = ()=> openDetail(el.dataset.id));
+  $$('.task[data-id]').forEach(el=>{
+    el.addEventListener('click', e=>{
+      if(e.target.classList.contains('chk')) return;
+      openDetail(el.dataset.id);
+    });
+  });
+  $$('.chk[data-tid]').forEach(el=>{
+    el.onclick = e=>{
+      e.stopPropagation();
+      const tid = el.dataset.tid;
+      const act = el.dataset.act;
+      const cur = myState(tid);
+      if(act === 'clear'){ setMyState(tid, ''); }
+      else if(cur === act){ setMyState(tid, ''); }
+      else { setMyState(tid, act); }
+      // 重新渲染当前视图
+      const active = $('.seg button.on');
+      if(active) show(active.dataset.view);
+    };
+  });
 }
 
 /* ---------- 全部任务（看板） ---------- */
@@ -300,12 +346,12 @@ function renderAll(){
     const list = DATA.tasks.filter(t=>t.status===st);
     return `<div class="col">
       <h3>${st}<span>${list.length}</span></h3>
-      ${list.map(taskCard).join('') || '<div class="empty" style="padding:16px">无</div>'}
+      ${list.map(t=>taskCard(t, false)).join('') || '<div class="empty" style="padding:16px">无</div>'}
     </div>`;
   }).join('');
   $('#v-all').innerHTML = `
     <div class="page-head"><h1>全部任务</h1>
-      <p>共 ${DATA.tasks.length} 项 · 所有班委可见，便于协作</p></div>
+      <p>共 ${DATA.tasks.length} 项 · 所有班委可见 · 岗位制分配</p></div>
     <div class="kanban">${cols}</div>`;
   bindCards();
 }
@@ -314,7 +360,7 @@ function renderAll(){
 let CAL_Y = new Date().getFullYear(), CAL_M = new Date().getMonth();
 function renderCal(){
   const first = new Date(CAL_Y, CAL_M, 1);
-  const startDow = (first.getDay() + 6) % 7; // 周一为 0
+  const startDow = (first.getDay() + 6) % 7;
   const daysIn = new Date(CAL_Y, CAL_M+1, 0).getDate();
   const cells = [];
   for(let i=0;i<startDow;i++) cells.push(null);
@@ -336,13 +382,13 @@ function renderCal(){
     const isToday = key === today();
     return `<div class="cal-day ${isToday?'today':''}" data-day="${key}">
       <div class="n">${d}</div>
-      ${list.slice(0,2).map(t=>`<div class="dot ${t.priority==='高'?'high':(t.priority==='中'?'mid':'')}">${esc(t.title)}</div>`).join('')}
+      ${list.slice(0,2).map(t=>`<div class="dot ${t.priority==='高'?'high':(t.priority==='中'?'mid':'low')}">${esc(t.title)}</div>`).join('')}
       ${list.length>2?`<div class="n">等 ${list.length} 项</div>`:''}
     </div>`;
   }).join('');
 
   $('#v-cal').innerHTML = `
-    <div class="page-head"><h1>日历</h1><p>按截止日期查看 · 点某一天看当天任务</p></div>
+    <div class="page-head"><h1>日历</h1><p>按截止日期查看 · 点某天看当天任务</p></div>
     <div class="cal">
       <div class="cal-head">
         <h2>${CAL_Y} 年 ${CAL_M+1} 月</h2>
@@ -367,7 +413,7 @@ function openDay(key){
     ${list.length ? list.map(t=>`<div style="margin:14px 0;padding:14px;background:#FAFBF8;border-radius:10px">
       <div style="font-weight:600;margin-bottom:6px">${esc(t.title)}</div>
       <div class="meta" style="font-size:12.5px;color:var(--label3)">
-        ${esc(t.dept)} · ${esc(t.status)} · 负责：${esc(ownerLabel(t))}
+        ${esc(t.dept)} · ${esc(t.status)} · 负责：${esc(roleLabel(t))}
       </div></div>`).join('') : '<div class="empty">这一天没有任务</div>'}`;
   $('#detail').classList.add('on');
 }
@@ -377,8 +423,10 @@ function openDetail(id){
   const t = DATA.tasks.find(x=>x.id===id);
   if(!t) return;
   const d = daysLeft(t.due);
+  const state = myState(t.id);
   const dueNote = (t.status!=='已完成' && d!==null)
     ? (d<0 ? `（已逾期 ${-d} 天）` : d===0 ? '（今天截止）' : `（还剩 ${d} 天）`) : '';
+  const stateLabel = state==='done' ? '✓ 你已标记完成' : state==='submitted' ? '你已标记提交辅导员' : '';
   $('#detail-box').innerHTML = `
     <button class="close" onclick="closeDetail()">×</button>
     <h2>${esc(t.title)}</h2>
@@ -386,13 +434,32 @@ function openDetail(id){
       <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority)}</span>
       <span class="pill blue">${esc(t.dept)}</span>
       <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
+      ${stateLabel?`<span class="pill green">${esc(stateLabel)}</span>`:''}
     </div>
-    <div class="field"><div class="k">负责人</div><div class="v">${esc(ownerLabel(t))}</div></div>
+    <div class="field"><div class="k">负责岗位</div><div class="v">${esc(roleLabel(t))}</div></div>
     <div class="field"><div class="k">时间</div><div class="v">开始 ${esc(t.start||'—')}　截止 ${esc(t.due||'—')} ${esc(dueNote)}</div></div>
     ${t.detail?`<div class="field"><div class="k">具体要求</div><div class="v">${esc(t.detail)}</div></div>`:''}
     ${t.deliverable?`<div class="field"><div class="k">需要交什么</div><div class="v">${esc(t.deliverable)}</div></div>`:''}
     ${t.note?`<div class="field"><div class="k">备注</div><div class="v">${esc(t.note)}</div></div>`:''}
-  `;
+    <div class="check-bar" style="margin-top:16px">
+      <span class="chk ${state==='done'?'on':''}" data-tid="${esc(t.id)}" data-act="done">✓ 我已完成</span>
+      <span class="chk ${state==='submitted'?'on-orange':''}" data-tid="${esc(t.id)}" data-act="submitted">已提交辅导员</span>
+      ${state?`<span class="chk" data-tid="${esc(t.id)}" data-act="clear">撤销</span>`:''}
+    </div>
+    <div class="empty" style="margin-top:12px;font-size:12px">勾选状态保存在你自己的浏览器里，其他人看不到。</div>`;
+  $$('#detail-box .chk[data-tid]').forEach(el=>{
+    el.onclick = ()=>{
+      const tid = el.dataset.tid;
+      const act = el.dataset.act;
+      const cur = myState(tid);
+      if(act === 'clear'){ setMyState(tid, ''); }
+      else if(cur === act){ setMyState(tid, ''); }
+      else { setMyState(tid, act); }
+      closeDetail();
+      const active = $('.seg button.on');
+      if(active) show(active.dataset.view);
+    };
+  });
   $('#detail').classList.add('on');
 }
 function closeDetail(){ $('#detail').classList.remove('on'); }
