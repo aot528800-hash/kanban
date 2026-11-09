@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>班委工作看板</title>
+<style>
+*{box-sizing:border-box}
+:root{
+  --bg:#F1F4EE; --surface:#fff; --label:#1E2A22; --label2:#5A6A5F; --label3:#8A968C;
+  --sep:#E6EAE2; --sep2:#CFD7CB; --accent:#6E8F72; --accent-soft:#E9F0E7;
+  --orange:#BE8A55; --orange-soft:#F6EFE4; --red:#B0605A; --red-soft:#F7E9E7;
+  --blue:#5E7FA6; --blue-soft:#E8EEF4; --radius:16px;
+  --shadow:0 1px 3px rgba(30,42,34,.05),0 8px 22px rgba(30,42,34,.04);
+}
+html,body{margin:0;background:var(--bg);color:var(--label);font-size:15px;line-height:1.55;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
+/* gate */
+#gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(120% 120% at 50% 0%,#3B4A3F,#232B25 60%,#141A15)}
+.gate-card{width:340px;text-align:center;padding:0 10px}
+.gate-icon{width:58px;height:58px;margin:0 auto 18px;border-radius:17px;background:linear-gradient(160deg,#8FAE94,#5E8464);
+  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.gate-icon svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.8}
+.gate-card h1{color:#fff;font-size:23px;margin-bottom:6px}
+.gate-card p{color:#9BA89D;font-size:13.5px;margin:0 0 22px}
+.gate-card input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.08);color:#fff;font-size:16px;outline:none;text-align:center;letter-spacing:2px}
+.gate-card input:focus{border-color:#8FAE94;background:rgba(255,255,255,.13)}
+.gate-card button{width:100%;margin-top:12px;padding:13px;border-radius:12px;background:#5E8464;color:#fff;font-size:16px;font-weight:600}
+.gate-err{color:#E58E86;font-size:13px;margin-top:11px;min-height:19px}
+/* layout */
+header{position:sticky;top:0;z-index:30;height:54px;display:flex;align-items:center;gap:18px;padding:0 26px;
+  background:rgba(255,255,255,.78);backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid var(--sep)}
+.brand{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px}
+.brand svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.8}
+.seg{display:flex;gap:2px;padding:3px;border-radius:10px;background:#EBEFE8}
+.seg button{padding:6px 15px;border-radius:8px;font-size:13.5px;color:var(--label2)}
+.seg button.on{background:#fff;color:var(--label);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.who{margin-left:auto;font-size:13px;color:var(--label2);display:flex;align-items:center;gap:8px}
+.who b{color:var(--label)}
+.out{font-size:12.5px;color:var(--label3);padding:6px 11px;border-radius:8px}
+.out:hover{background:#EBEFE8}
+main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
+.page-head{margin-bottom:20px}
+.page-head h1{font-size:27px}
+.page-head p{margin:5px 0 0;color:var(--label3);font-size:13.5px}
+.card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:14px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
+/* task */
+.task{background:var(--surface);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);
+  margin-bottom:12px;cursor:pointer;border-left:4px solid var(--sep2);transition:.15s}
+.task:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,42,34,.1)}
+.task.p-高{border-left-color:var(--red)}
+.task.p-中{border-left-color:var(--orange)}
+.task.p-低{border-left-color:var(--accent)}
+.task h3{font-size:15.5px;margin-bottom:6px}
+.task .meta{font-size:12.5px;color:var(--label3);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.task .meta b{color:var(--label2);font-weight:500}
+.pill{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;background:#EFF2EA;color:var(--label2);white-space:nowrap}
+.pill.red{background:var(--red-soft);color:var(--red)}
+.pill.orange{background:var(--orange-soft);color:#8A5D2E}
+.pill.blue{background:var(--blue-soft);color:var(--blue)}
+.pill.green{background:var(--accent-soft);color:#41694A}
+.due-soon{color:var(--red)!important;font-weight:600}
+/* kanban */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:900px){.kanban{grid-template-columns:1fr}}
+.col{background:#EAEEE6;border-radius:14px;padding:12px;min-height:180px}
+.col h3{font-size:13px;color:var(--label2);margin:0 0 10px;padding:0 4px;display:flex;justify-content:space-between}
+.col h3 span{color:var(--label3);font-weight:400}
+.col .task{margin-bottom:10px}
+/* calendar */
+.cal{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.cal-head h2{font-size:17px}
+.cal-nav{display:flex;gap:6px}
+.cal-nav button{width:30px;height:30px;border-radius:8px;background:#EFF2EA;color:var(--label2)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.cal-dow{text-align:center;font-size:12px;color:var(--label3);padding:6px 0}
+.cal-day{min-height:76px;border-radius:9px;padding:6px;background:#FAFBF8;border:1px solid transparent;cursor:pointer}
+.cal-day:hover{border-color:var(--accent)}
+.cal-day.out{opacity:.35}
+.cal-day.today{background:var(--accent-soft);border-color:var(--accent)}
+.cal-day .n{font-size:12px;color:var(--label3)}
+.cal-day .dot{display:block;height:4px;border-radius:2px;background:var(--accent);margin-top:4px;font-size:11px;
+  color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 5px;height:auto;line-height:1.3}
+.cal-day .dot.high{background:#F1D3D0}
+.cal-day .dot.mid{background:#F3E3CF}
+/* detail */
+#detail{position:fixed;inset:0;z-index:90;background:rgba(20,26,21,.45);display:none;
+  align-items:center;justify-content:center;padding:20px}
+#detail.on{display:flex}
+.detail-box{background:#fff;border-radius:18px;width:min(560px,94vw);max-height:85vh;overflow:auto;padding:26px 28px}
+.detail-box h2{font-size:20px;margin-bottom:14px}
+.field{margin:12px 0}
+.field .k{font-size:12.5px;color:var(--label3);margin-bottom:3px}
+.field .v{font-size:14.5px;white-space:pre-wrap}
+.close{float:right;color:var(--label3);font-size:20px;line-height:1}
+.empty{color:var(--label3);text-align:center;padding:36px;font-size:13.5px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px}
+select{padding:8px 30px 8px 12px;border-radius:9px;border:1px solid var(--sep2);background:#fff;font-size:13.5px;outline:none}
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:700px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+.stat{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.stat .k{font-size:12.5px;color:var(--label3)}
+.stat .v{font-size:26px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <div class="gate-icon">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+    </div>
+    <h1>班委工作看板</h1>
+    <p>请输入你的专属密码</p>
+    <input id="pwd" type="password" autocomplete="off" placeholder="例如 ABCD-1234">
+    <button id="btn-unlock">进入</button>
+    <div class="gate-err" id="gate-err"></div>
+  </div>
+</div>
+
+<div id="app" hidden>
+  <header>
+    <div class="brand">
+      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      班委工作看板
+    </div>
+    <div class="seg">
+      <button data-view="mine" class="on">我的任务</button>
+      <button data-view="all">全部任务</button>
+      <button data-view="cal">日历</button>
+    </div>
+    <div class="who"><span id="who-txt"></span><button class="out" id="btn-out">退出</button></div>
+  </header>
+  <main>
+    <div id="printTitle" style="display:none"></div>
+    <section id="v-mine"></section>
+    <section id="v-all" hidden></section>
+    <section id="v-cal" hidden></section>
+  </main>
+</div>
+
+<div id="detail">
+  <div class="detail-box" id="detail-box"></div>
+</div>
+
+<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-班长","iv":"dAdJtQpU9r7OiKfE","ct":"8fOpCMaF52KaNnnk2dzKnALHMjhvilIF9/xbDjOtoYMpeJqUOVHPxeeuqhInMN+Q"},{"id":"研旅261-副班长","iv":"kPST51M91RFPtj0N","ct":"+Dqk05Pyy6YdHOYLRd1hnstcxXQfRbc4SUlylEoKTQVX3+lGNV/2hPh9I9ROU1ao"},{"id":"研旅261-团支书","iv":"XoDodSQyERHBnNuV","ct":"3s6fuAw76XIdVItqrxDdMcOsg+CywVVRFscAhJWbKE0Uvt0VuXWnt5+2ONqV+wzL"},{"id":"研旅261-学习委员","iv":"gNNykcG9n4X+My9Q","ct":"uNlt2PDidQ26isAwlUWQbGvt0vl4vxKhGAeSvCdtgLjGSSMZAY2aNd8wlBGr7KNK"},{"id":"研旅261-生活委员","iv":"0nDTSKPJds3fTs01","ct":"1vW+Qfcus0IGFtcxUHJWiPHqlcqoqrpjPfPSaEP1renPsj5O3m49QuIgN0L4D3oi"},{"id":"研旅261-文体委员","iv":"7rQGfQfM5YC8VsPk","ct":"GHOZSCZ0XbXJ/c84x7AtoPkpZ6wrRnyCXtYilfimSudpYP1QUf7gMQuPAkRMOweQ"},{"id":"研旅261-心理委员","iv":"/Q9rAZ8LM4d9JWei","ct":"V/GGj3I+0uEZEwjazQzgdgRBGaXt625lVhyMm6paZ9PFqqcsRH9UFYQCXS7FuruR"},{"id":"研旅261-宣传委员","iv":"5f62OYNDo0ZpvxOy","ct":"D7Le1tDvOJlrTuLeXu322ljNxTyvOfXVUBusxDEvNI7+Zu24zis/PXaz2RqlMCgx"},{"id":"营销261-班长","iv":"IyL/Xd8gk9ruWaYu","ct":"thLkRTcPD01+n1XLOuF9ltPloKO7g72bnOIzBp0yZ17TJJq6f4Q/DBBwrZuCKHkc"},{"id":"营销261-副班长","iv":"CF69UTGxI6XADd7+","ct":"tcMQ7dQPiLQXKTomSiFOonmkxNR3VKnh50XV0HkfaSNfyvorsw5hut/Ne5x9OQ+U"},{"id":"营销261-团支书","iv":"s9DrUGSRH+udrEOc","ct":"03KxWsTQravKkitGbdUhP5IbD2jCGJ4DEDjgZZtfHTRJPa9ftn3LxPpQxQWmBPwJ"},{"id":"营销261-学习委员","iv":"QogbxKS18hL8/kxS","ct":"PV8z4qEPg+ToalB5pvK1xIFSE4QME4FOwhnaBN5g1VH260GjhlWcpdK5JtEglwjd"},{"id":"营销261-生活委员","iv":"SZqkTiRyEO1Ora3N","ct":"x+fRJbKzzPjb7MN7tdW7YOmTIiT9UJHqvKzKBM2CqRjY2lk/65ZeoJIrna7TsRv8"},{"id":"营销261-文体委员","iv":"CraixR5I86aPbPFl","ct":"egD+/k/rLRpgjwU/qH6XVvawxP2VkknCWEDSQ8ON64pM7q5RUs953wlA4y10D6YZ"},{"id":"营销261-心理委员","iv":"gJlwW1BbW/Atz3Rn","ct":"fDZjVbG/CFcwnB3l2kkCJ3JSZZaN8WGeeqTAHulqetkg5XhDAOwGl2Xvv7MEH7fA"},{"id":"营销261-宣传委员","iv":"yd2gKQCvaDi+XTy3","ct":"LyaaL1RtCUJyn2lBK0/ZHbopfEEXalT2dFKN3npbPRnu0gvh8fqgPQ7UAgkgIbKd"},{"id":"营销262-班长","iv":"VrwDkrOgJlhF6JcP","ct":"C4MTNYp6hqVhQUpe9qpVzP49FKbanQAAJRNA6d6ciVboMvUtNhMTzXjnsX0oei7n"},{"id":"营销262-副班长","iv":"hTt6g6c5TjldWBGa","ct":"LNng5OHZ2sIA6n1RsZf++cc5vsEIjWda3/YfnB6O6cg/1zYliLrqKaertEGo79Ph"},{"id":"营销262-团支书","iv":"1aCHzQbSMnaN/pQe","ct":"PldP8Jy8H66C/eUhKmQ+sxDLRr6GTZeHBtZOfZxPxCFIkIZH6AYU8Vun4L0Ntnw0"},{"id":"营销262-学习委员","iv":"MYFM8QHLGQbJwx5A","ct":"mWgoJ5MxB/8T2O4/iJAdikb4JT8ANW9rei1uP26ZPM+NJ1A7YVZ+7dTB4npEWfFw"},{"id":"营销262-生活委员","iv":"mdiaEJNADOyPbqCK","ct":"9bB9AWXF2LXW7GDT5LrKyyaiR+wlNT/02aGtlyFqED2do1HsWpNfRKQR5VP0p1su"},{"id":"营销262-文体委员","iv":"np67gAuUwQi8fvZL","ct":"uYO6HnaYhTjZAYpbZArD7CoSCG+iWn31pRGXPYy4bL2DBhAH9eM2cszQkjgga+jl"},{"id":"营销262-心理委员","iv":"aKAPOCVaA2iu457L","ct":"nrAOAvXDdz4YRPwNBHJtOHnhw51gSR49zIhBkgCJuwvrnlq82yX+2TTzdfH4v7Ui"},{"id":"营销262-宣传委员","iv":"ck1dVgngw0eWUsEP","ct":"p+C2UAEvX5c2kTTHr8kv5Tj4UWC1PfCq3Rk6lDNMXwRM9lsWwC2Gl4itlKyyuKQV"}],"iv":"PjiPtUjl4lD2Ee54","ct":"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"};</script>
+<script>
+"use strict";
+let DATA = null, ME = null;
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const b64d = s => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
+const dstr = d => d ? d.toISOString().slice(0,10) : '';
+const today = () => { const d = new Date(); return dstr(d); };
+const daysLeft = due => {
+  if(!due) return null;
+  const a = new Date(due+'T00:00:00'), b = new Date(today()+'T00:00:00');
+  return Math.round((a-b)/86400000);
+};
+
+/* ---------- 解密 ---------- */
+async function unlock(pwd){
+  const enc = new TextEncoder();
+  const B = window.__BLOB__;
+  const km = await crypto.subtle.importKey('raw', enc.encode(pwd), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    {name:'PBKDF2', salt:b64d(B.salt), iterations:B.iter, hash:'SHA-256'},
+    km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  for(const s of B.slots){
+    try{
+      const rawK = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(s.iv)}, key, b64d(s.ct));
+      const k = await crypto.subtle.importKey('raw', rawK, 'AES-GCM', false, ['decrypt']);
+      const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(B.iv)}, k, b64d(B.ct));
+      return { me: s.id, data: JSON.parse(new TextDecoder().decode(pt)) };
+    }catch(e){ /* 换下一个 */ }
+  }
+  throw new Error('bad');
+}
+
+$('#btn-unlock').onclick = async ()=>{
+  const pwd = $('#pwd').value.trim();
+  if(!pwd){ $('#gate-err').textContent = '请输入密码'; return; }
+  $('#gate-err').textContent = '';
+  $('#btn-unlock').textContent = '正在解密…';
+  try{
+    const r = await unlock(pwd);
+    ME = r.me; DATA = r.data;
+    $('#gate').style.display = 'none';
+    $('#app').hidden = false;
+    init();
+  }catch(e){
+    $('#gate-err').textContent = '密码不正确';
+    $('#btn-unlock').textContent = '进入';
+  }
+};
+$('#pwd').addEventListener('keydown', e=>{ if(e.key === 'Enter') $('#btn-unlock').click(); });
+$('#btn-out').onclick = ()=> location.reload();
+
+/* ---------- 工具 ---------- */
+function personOf(id){ return (DATA.people||[]).find(p=>p.id===id); }
+function ownerLabel(t){
+  if(t.owners.includes('全体')) return '全体班委';
+  return t.owners.map(o=>{
+    const p = personOf(o);
+    if(!p) return o;
+    return p.name ? `${p.name}（${p.class}·${p.role}）` : `${p.class}·${p.role}`;
+  }).join('、');
+}
+function isMine(t){
+  if(t.owners.includes('全体')) return true;
+  return t.owners.includes(ME);
+}
+const STATUS = ['待办','进行中','已完成'];
+const PRIO = {'高':1,'中':2,'低':3};
+
+/* ---------- 路由 ---------- */
+function show(v){
+  ['mine','all','cal'].forEach(x=>{
+    const el = $('#v-'+x); if(el) el.hidden = (x!==v);
+  });
+  $$('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
+  if(v==='mine') renderMine();
+  if(v==='all') renderAll();
+  if(v==='cal') renderCal();
+  window.scrollTo(0,0);
+}
+$$('.seg button').forEach(b=> b.onclick = ()=> show(b.dataset.view));
+
+function init(){
+  const p = personOf(ME);
+  $('#who-txt').innerHTML = p
+    ? `<b>${esc(p.name || p.role)}</b>　${esc(p.class)} · ${esc(p.role)}`
+    : esc(ME);
+  show('mine');
+}
+
+/* ---------- 我的任务 ---------- */
+function renderMine(){
+  const all = DATA.tasks;
+  const mine = all.filter(isMine);
+  const todo = mine.filter(t=>t.status!=='已完成');
+  const high = todo.filter(t=>t.priority==='高').length;
+  const soon = todo.filter(t=>{ const d=daysLeft(t.due); return d!==null && d<=3 && d>=0; }).length;
+  const done = mine.filter(t=>t.status==='已完成').length;
+
+  $('#v-mine').innerHTML = `
+    <div class="page-head">
+      <h1>我的任务</h1>
+      <p>更新于 ${esc(DATA.updated)} · 共 ${mine.length} 项分配给你</p>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="k">未完成</div><div class="v">${todo.length}</div></div>
+      <div class="stat"><div class="k">高优先级</div><div class="v" style="color:var(--red)">${high}</div></div>
+      <div class="stat"><div class="k">3 天内截止</div><div class="v" style="color:var(--orange)">${soon}</div></div>
+      <div class="stat"><div class="k">已完成</div><div class="v" style="color:var(--accent)">${done}</div></div>
+    </div>
+    ${todo.length ? todo.map(taskCard).join('') : '<div class="card"><div class="empty">暂时没有分配给你的任务</div></div>'}
+    ${done ? `<div class="page-head" style="margin-top:24px"><h1 style="font-size:17px">已完成</h1></div>` + done.map(taskCard).join('') : ''}
+  `;
+  bindCards();
+}
+
+function taskCard(t){
+  const d = daysLeft(t.due);
+  let dueHtml = t.due ? esc(t.due) : '未设';
+  if(t.status !== '已完成' && d !== null){
+    if(d < 0) dueHtml = `<span class="due-soon">已逾期 ${-d} 天</span>`;
+    else if(d === 0) dueHtml = `<span class="due-soon">今天截止</span>`;
+    else if(d <= 3) dueHtml = `<span class="due-soon">${dueHtml}（还剩 ${d} 天）</span>`;
+  }
+  return `<div class="task p-${esc(t.priority||'低')}" data-id="${esc(t.id)}">
+    <h3>${esc(t.title)}</h3>
+    <div class="meta">
+      <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority||'低')}</span>
+      <span class="pill blue">${esc(t.dept||'—')}</span>
+      <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
+      <span>截止：${dueHtml}</span>
+      ${t.status!=='已完成' ? `<span>负责：${esc(ownerLabel(t))}</span>` : ''}
+    </div>
+  </div>`;
+}
+
+function bindCards(){
+  $$('.task').forEach(el=> el.onclick = ()=> openDetail(el.dataset.id));
+}
+
+/* ---------- 全部任务（看板） ---------- */
+function renderAll(){
+  const cols = STATUS.map(st=>{
+    const list = DATA.tasks.filter(t=>t.status===st);
+    return `<div class="col">
+      <h3>${st}<span>${list.length}</span></h3>
+      ${list.map(taskCard).join('') || '<div class="empty" style="padding:16px">无</div>'}
+    </div>`;
+  }).join('');
+  $('#v-all').innerHTML = `
+    <div class="page-head"><h1>全部任务</h1>
+      <p>共 ${DATA.tasks.length} 项 · 所有班委可见，便于协作</p></div>
+    <div class="kanban">${cols}</div>`;
+  bindCards();
+}
+
+/* ---------- 日历 ---------- */
+let CAL_Y = new Date().getFullYear(), CAL_M = new Date().getMonth();
+function renderCal(){
+  const first = new Date(CAL_Y, CAL_M, 1);
+  const startDow = (first.getDay() + 6) % 7; // 周一为 0
+  const daysIn = new Date(CAL_Y, CAL_M+1, 0).getDate();
+  const cells = [];
+  for(let i=0;i<startDow;i++) cells.push(null);
+  for(let d=1; d<=daysIn; d++) cells.push(d);
+
+  const byDay = {};
+  DATA.tasks.forEach(t=>{
+    if(t.due){
+      const dt = t.due.slice(0,10);
+      (byDay[dt] = byDay[dt] || []).push(t);
+    }
+  });
+
+  const pad = n => String(n).padStart(2,'0');
+  const htmlCells = cells.map(d=>{
+    if(!d) return '<div class="cal-day out"></div>';
+    const key = `${CAL_Y}-${pad(CAL_M+1)}-${pad(d)}`;
+    const list = byDay[key] || [];
+    const isToday = key === today();
+    return `<div class="cal-day ${isToday?'today':''}" data-day="${key}">
+      <div class="n">${d}</div>
+      ${list.slice(0,2).map(t=>`<div class="dot ${t.priority==='高'?'high':(t.priority==='中'?'mid':'')}">${esc(t.title)}</div>`).join('')}
+      ${list.length>2?`<div class="n">等 ${list.length} 项</div>`:''}
+    </div>`;
+  }).join('');
+
+  $('#v-cal').innerHTML = `
+    <div class="page-head"><h1>日历</h1><p>按截止日期查看 · 点某一天看当天任务</p></div>
+    <div class="cal">
+      <div class="cal-head">
+        <h2>${CAL_Y} 年 ${CAL_M+1} 月</h2>
+        <div class="cal-nav"><button id="cal-prev">‹</button><button id="cal-next">›</button></div>
+      </div>
+      <div class="cal-grid">
+        ${['一','二','三','四','五','六','日'].map(x=>`<div class="cal-dow">${x}</div>`).join('')}
+        ${htmlCells}
+      </div>
+    </div>`;
+
+  $('#cal-prev').onclick = ()=>{ CAL_M--; if(CAL_M<0){CAL_M=11;CAL_Y--;} renderCal(); };
+  $('#cal-next').onclick = ()=>{ CAL_M++; if(CAL_M>11){CAL_M=0;CAL_Y++;} renderCal(); };
+  $$('.cal-day[data-day]').forEach(el=> el.onclick = ()=> openDay(el.dataset.day));
+}
+
+function openDay(key){
+  const list = DATA.tasks.filter(t=>t.due && t.due.slice(0,10)===key);
+  $('#detail-box').innerHTML = `
+    <button class="close" onclick="closeDetail()">×</button>
+    <h2>${esc(key)}</h2>
+    ${list.length ? list.map(t=>`<div style="margin:14px 0;padding:14px;background:#FAFBF8;border-radius:10px">
+      <div style="font-weight:600;margin-bottom:6px">${esc(t.title)}</div>
+      <div class="meta" style="font-size:12.5px;color:var(--label3)">
+        ${esc(t.dept)} · ${esc(t.status)} · 负责：${esc(ownerLabel(t))}
+      </div></div>`).join('') : '<div class="empty">这一天没有任务</div>'}`;
+  $('#detail').classList.add('on');
+}
+
+/* ---------- 详情 ---------- */
+function openDetail(id){
+  const t = DATA.tasks.find(x=>x.id===id);
+  if(!t) return;
+  const d = daysLeft(t.due);
+  const dueNote = (t.status!=='已完成' && d!==null)
+    ? (d<0 ? `（已逾期 ${-d} 天）` : d===0 ? '（今天截止）' : `（还剩 ${d} 天）`) : '';
+  $('#detail-box').innerHTML = `
+    <button class="close" onclick="closeDetail()">×</button>
+    <h2>${esc(t.title)}</h2>
+    <div style="margin-bottom:14px">
+      <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority)}</span>
+      <span class="pill blue">${esc(t.dept)}</span>
+      <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
+    </div>
+    <div class="field"><div class="k">负责人</div><div class="v">${esc(ownerLabel(t))}</div></div>
+    <div class="field"><div class="k">时间</div><div class="v">开始 ${esc(t.start||'—')}　截止 ${esc(t.due||'—')} ${esc(dueNote)}</div></div>
+    ${t.detail?`<div class="field"><div class="k">具体要求</div><div class="v">${esc(t.detail)}</div></div>`:''}
+    ${t.deliverable?`<div class="field"><div class="k">需要交什么</div><div class="v">${esc(t.deliverable)}</div></div>`:''}
+    ${t.note?`<div class="field"><div class="k">备注</div><div class="v">${esc(t.note)}</div></div>`:''}
+  `;
+  $('#detail').classList.add('on');
+}
+function closeDetail(){ $('#detail').classList.remove('on'); }
+$('#detail').onclick = e=>{ if(e.target.id === 'detail') closeDetail(); };
+document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeDetail(); });
+</script>
+</body>
+</html>
