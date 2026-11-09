@@ -5,132 +5,201 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>班委工作看板</title>
 <style>
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#F1F4EE; --surface:#fff; --label:#1E2A22; --label2:#5A6A5F; --label3:#8A968C;
-  --sep:#E6EAE2; --sep2:#CFD7CB; --accent:#6E8F72; --accent-soft:#E9F0E7;
-  --orange:#BE8A55; --orange-soft:#F6EFE4; --red:#B0605A; --red-soft:#F7E9E7;
-  --blue:#5E7FA6; --blue-soft:#E8EEF4; --radius:16px;
-  --shadow:0 1px 3px rgba(30,42,34,.05),0 8px 22px rgba(30,42,34,.04);
+  --blue:#0058A3; --blue-d:#003E70; --blue-l:#E8F0FA;
+  --yellow:#FFDB00; --yellow-d:#E5C500;
+  --bg:#F5F5F0; --surface:#fff; --text:#111; --text2:#484848; --text3:#767676;
+  --border:#DFDFDF; --border-l:#EDEDED;
+  --ok:#0A8A00; --ok-bg:#E8F5E8;
+  --warn:#E86A00; --warn-bg:#FFF3E6;
+  --err:#E00751; --err-bg:#FDE8EE;
+  --r:12px; --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 12px rgba(0,0,0,.05);
 }
-html,body{margin:0;background:var(--bg);color:var(--label);font-size:15px;line-height:1.55;
-  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;-webkit-font-smoothing:antialiased}
+html,body{background:var(--bg);color:var(--text);font-size:15px;line-height:1.55;
+  font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;
+  -webkit-font-smoothing:antialiased}
 button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
-h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.01em}
-/* gate */
+h1,h2,h3{font-weight:700;letter-spacing:-.01em}
+input,select,textarea{font:inherit}
+
+/* ===== Gate ===== */
 #gate{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(120% 120% at 50% 0%,#3B4A3F,#232B25 60%,#141A15)}
-.gate-card{width:340px;text-align:center;padding:0 10px}
-.gate-icon{width:58px;height:58px;margin:0 auto 18px;border-radius:17px;background:linear-gradient(160deg,#8FAE94,#5E8464);
-  display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(0,0,0,.3)}
-.gate-icon svg{width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.8}
-.gate-card h1{color:#fff;font-size:23px;margin-bottom:6px}
-.gate-card p{color:#9BA89D;font-size:13.5px;margin:0 0 22px}
-.gate-card input{width:100%;padding:13px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.14);
-  background:rgba(255,255,255,.08);color:#fff;font-size:16px;outline:none;text-align:center;letter-spacing:2px}
-.gate-card input:focus{border-color:#8FAE94;background:rgba(255,255,255,.13)}
-.gate-card button{width:100%;margin-top:12px;padding:13px;border-radius:12px;background:#5E8464;color:#fff;font-size:16px;font-weight:600}
-.gate-err{color:#E58E86;font-size:13px;margin-top:11px;min-height:19px}
-/* layout */
-header{position:sticky;top:0;z-index:30;height:54px;display:flex;align-items:center;gap:18px;padding:0 26px;
-  background:rgba(255,255,255,.78);backdrop-filter:saturate(180%) blur(18px);border-bottom:1px solid var(--sep)}
-.brand{font-weight:600;font-size:15px;display:flex;align-items:center;gap:7px}
-.brand svg{width:18px;height:18px;stroke:var(--accent);fill:none;stroke-width:1.8}
-.seg{display:flex;gap:2px;padding:3px;border-radius:10px;background:#EBEFE8}
-.seg button{padding:6px 15px;border-radius:8px;font-size:13.5px;color:var(--label2)}
-.seg button.on{background:#fff;color:var(--label);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.08)}
-.who{margin-left:auto;font-size:13px;color:var(--label2);display:flex;align-items:center;gap:8px}
-.who b{color:var(--label)}
-.out{font-size:12.5px;color:var(--label3);padding:6px 11px;border-radius:8px}
-.out:hover{background:#EBEFE8}
-main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
-.page-head{margin-bottom:20px}
-.page-head h1{font-size:27px}
-.page-head p{margin:5px 0 0;color:var(--label3);font-size:13.5px}
-.card{background:var(--surface);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
-.grid{display:grid;gap:14px}
+  background:var(--blue)}
+.gate-box{width:380px;background:#fff;border-radius:20px;padding:40px 36px;text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.gate-logo{width:64px;height:64px;margin:0 auto 20px;border-radius:18px;background:var(--yellow);
+  display:flex;align-items:center;justify-content:center}
+.gate-logo svg{width:32px;height:32px;fill:var(--blue)}
+.gate-box h1{font-size:24px;margin-bottom:6px}
+.gate-box p{color:var(--text3);font-size:14px;margin-bottom:24px}
+.gate-box input{width:100%;padding:14px 18px;border-radius:12px;border:2px solid var(--border);
+  font-size:17px;text-align:center;letter-spacing:3px;outline:none;transition:.2s}
+.gate-box input:focus{border-color:var(--blue)}
+.gate-box .btn-main{width:100%;margin-top:16px;padding:14px;border-radius:12px;
+  background:var(--blue);color:#fff;font-size:17px;font-weight:700;transition:.15s}
+.gate-box .btn-main:hover{background:var(--blue-d)}
+.gate-box .btn-main:active{transform:scale(.98)}
+.gate-err{color:var(--err);font-size:13px;margin-top:12px;min-height:20px}
+
+/* ===== Header ===== */
+header{position:sticky;top:0;z-index:30;height:60px;display:flex;align-items:center;gap:16px;
+  padding:0 28px;background:var(--surface);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-size:17px;font-weight:700;white-space:nowrap}
+.brand-icon{width:32px;height:32px;border-radius:10px;background:var(--yellow);
+  display:flex;align-items:center;justify-content:center}
+.brand-icon svg{width:18px;height:18px;fill:var(--blue)}
+.seg{display:flex;gap:4px;background:#F0F0EC;padding:4px;border-radius:12px}
+.seg button{padding:8px 20px;border-radius:9px;font-size:14px;font-weight:600;color:var(--text2);transition:.15s}
+.seg button:hover{background:#E8E8E2}
+.seg button.on{background:var(--blue);color:#fff}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.who{font-size:13px;color:var(--text2);display:flex;align-items:center;gap:8px}
+.who b{color:var(--text)}
+.btn-sm{padding:8px 16px;border-radius:9px;font-size:13px;font-weight:600;transition:.15s}
+.btn-sm.outline{border:2px solid var(--border);color:var(--text2)}
+.btn-sm.outline:hover{border-color:var(--blue);color:var(--blue)}
+.btn-sm.filled{background:var(--blue);color:#fff}
+.btn-sm.filled:hover{background:var(--blue-d)}
+.btn-sm.yellow{background:var(--yellow);color:var(--blue)}
+.btn-sm.yellow:hover{background:var(--yellow-d)}
+
+/* ===== Layout ===== */
+main{max-width:1280px;margin:0 auto;padding:28px 24px 80px}
+.page-head{margin-bottom:24px}
+.page-head h1{font-size:32px;margin-bottom:4px}
+.page-head p{color:var(--text3);font-size:14px}
+.card{background:var(--surface);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+.grid{display:grid;gap:16px}
 .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
 .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media(max-width:900px){.g2,.g3{grid-template-columns:1fr}}
-/* task */
-.task{background:var(--surface);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow);
-  margin-bottom:12px;border-left:4px solid var(--sep2);transition:.15s}
-.task:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(30,42,34,.1)}
-.task.p-高{border-left-color:var(--red)}
-.task.p-中{border-left-color:var(--orange)}
-.task.p-低{border-left-color:var(--accent)}
-.task.done{opacity:.55;border-left-color:var(--accent)}
-.task h3{font-size:15.5px;margin-bottom:6px}
-.task .meta{font-size:12.5px;color:var(--label3);display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.task .meta b{color:var(--label2);font-weight:500}
-.pill{display:inline-block;font-size:11.5px;padding:2px 9px;border-radius:20px;background:#EFF2EA;color:var(--label2);white-space:nowrap}
-.pill.red{background:var(--red-soft);color:var(--red)}
-.pill.orange{background:var(--orange-soft);color:#8A5D2E}
-.pill.blue{background:var(--blue-soft);color:var(--blue)}
-.pill.green{background:var(--accent-soft);color:#41694A}
-.due-soon{color:var(--red)!important;font-weight:600}
-/* check-off */
-.check-bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.chk{font-size:12.5px;padding:5px 14px;border-radius:8px;border:1.5px solid var(--sep2);
-  color:var(--label3);cursor:pointer;transition:.15s;user-select:none}
-.chk:hover{border-color:var(--accent);color:var(--accent)}
-.chk.on{background:var(--accent);border-color:var(--accent);color:#fff}
-.chk.on-orange{background:var(--orange);border-color:var(--orange);color:#fff}
-/* kanban */
-.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-@media(max-width:900px){.kanban{grid-template-columns:1fr}}
-.col{background:#EAEEE6;border-radius:14px;padding:12px;min-height:180px}
-.col h3{font-size:13px;color:var(--label2);margin:0 0 10px;padding:0 4px;display:flex;justify-content:space-between}
-.col h3 span{color:var(--label3);font-weight:400}
-.col .task{margin-bottom:10px}
-/* calendar */
-.cal{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:18px}
-.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.cal-head h2{font-size:17px}
-.cal-nav{display:flex;gap:6px}
-.cal-nav button{width:30px;height:30px;border-radius:8px;background:#EFF2EA;color:var(--label2)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
-.cal-dow{text-align:center;font-size:12px;color:var(--label3);padding:6px 0}
-.cal-day{min-height:76px;border-radius:9px;padding:6px;background:#FAFBF8;border:1px solid transparent;cursor:pointer}
-.cal-day:hover{border-color:var(--accent)}
-.cal-day.out{opacity:.35}
-.cal-day.today{background:var(--accent-soft);border-color:var(--accent)}
-.cal-day .n{font-size:12px;color:var(--label3)}
-.cal-day .dot{display:block;margin-top:4px;font-size:11px;
-  color:var(--label2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:3px 5px;
-  height:auto;line-height:1.3;border-radius:4px}
-.cal-day .dot.high{background:#F1D3D0}
-.cal-day .dot.mid{background:#F3E3CF}
-.cal-day .dot.low{background:#DDE8D8}
-/* detail */
-#detail{position:fixed;inset:0;z-index:90;background:rgba(20,26,21,.45);display:none;
-  align-items:center;justify-content:center;padding:20px}
-#detail.on{display:flex}
-.detail-box{background:#fff;border-radius:18px;width:min(560px,94vw);max-height:85vh;overflow:auto;padding:26px 28px}
-.detail-box h2{font-size:20px;margin-bottom:14px}
-.field{margin:12px 0}
-.field .k{font-size:12.5px;color:var(--label3);margin-bottom:3px}
-.field .v{font-size:14.5px;white-space:pre-wrap}
-.close{float:right;color:var(--label3);font-size:20px;line-height:1}
-.empty{color:var(--label3);text-align:center;padding:36px;font-size:13.5px}
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1000px){.g3,.g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr}}
+
+/* ===== Stats ===== */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
 @media(max-width:700px){.stat-row{grid-template-columns:repeat(2,1fr)}}
-.stat{background:#fff;border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-.stat .k{font-size:12.5px;color:var(--label3)}
-.stat .v{font-size:26px;font-weight:600;margin-top:3px;font-variant-numeric:tabular-nums}
+.stat{background:var(--surface);border-radius:var(--r);padding:18px 22px;box-shadow:var(--shadow)}
+.stat .k{font-size:13px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.03em}
+.stat .v{font-size:36px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+.stat .v.blue{color:var(--blue)} .stat .v.green{color:var(--ok)} .stat .v.orange{color:var(--warn)}
+
+/* ===== Task Card ===== */
+.task{background:var(--surface);border-radius:var(--r);padding:20px 22px;box-shadow:var(--shadow);
+  margin-bottom:14px;border-left:5px solid var(--border);transition:.15s}
+.task:hover{box-shadow:0 4px 16px rgba(0,0,0,.1)}
+.task.p-高{border-left-color:var(--err)}
+.task.p-中{border-left-color:var(--warn)}
+.task.p-低{border-left-color:var(--ok)}
+.task.st-done{opacity:.6;border-left-color:var(--ok)}
+.task h3{font-size:17px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.task .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;color:var(--text3);align-items:center}
+.task .meta b{color:var(--text2)}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;
+  padding:3px 10px;border-radius:20px;white-space:nowrap}
+.pill.blue{background:var(--blue-l);color:var(--blue)}
+.pill.yellow{background:#FFF8DC;color:#8B7500}
+.pill.green{background:var(--ok-bg);color:var(--ok)}
+.pill.orange{background:var(--warn-bg);color:var(--warn)}
+.pill.red{background:var(--err-bg);color:var(--err)}
+.pill.gray{background:#F0F0EC;color:var(--text3)}
+.due-soon{color:var(--err);font-weight:700}
+
+/* ===== Progress Controls ===== */
+.progress-bar{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.pbtn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:10px;
+  font-size:14px;font-weight:600;transition:.15s;border:2px solid transparent}
+.pbtn:hover{transform:translateY(-1px)}
+.pbtn:active{transform:scale(.97)}
+.pbtn.todo{background:#F0F0EC;color:var(--text2)}
+.pbtn.todo:hover{background:#E8E8E2}
+.pbtn.doing{background:var(--blue);color:#fff}
+.pbtn.done{background:var(--ok);color:#fff}
+.pbtn.submit{background:var(--yellow);color:var(--blue)}
+.pbtn.undo{background:none;color:var(--text3);border-color:var(--border);padding:9px 14px}
+.pbtn.undo:hover{border-color:var(--err);color:var(--err)}
+.pbtn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.progress-info{margin-top:10px;font-size:13px;color:var(--text3);display:flex;align-items:center;gap:6px}
+.progress-info .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.progress-info .dot.doing{background:var(--blue)}
+.progress-info .dot.done{background:var(--ok)}
+.progress-info .dot.sub{background:var(--yellow)}
+
+/* ===== Kanban ===== */
+.kanban{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.kanban{grid-template-columns:1fr}}
+.kcol{background:#EDEDE8;border-radius:16px;padding:16px;min-height:200px}
+.kcol h3{font-size:15px;margin-bottom:12px;padding:0 4px;display:flex;justify-content:space-between;align-items:center}
+.kcol h3 .count{background:var(--surface);padding:2px 10px;border-radius:12px;font-size:13px;font-weight:700}
+.kcol .task{margin-bottom:12px}
+
+/* ===== Calendar ===== */
+.cal{background:var(--surface);border-radius:var(--r);box-shadow:var(--shadow);padding:24px}
+.cal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.cal-head h2{font-size:22px}
+.cal-nav{display:flex;gap:8px}
+.cal-nav button{width:40px;height:40px;border-radius:10px;background:#F0F0EC;font-size:20px;
+  display:flex;align-items:center;justify-content:center;transition:.15s}
+.cal-nav button:hover{background:var(--blue);color:#fff}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.cal-dow{text-align:center;font-size:13px;font-weight:700;color:var(--text3);padding:8px 0}
+.cal-day{min-height:90px;border-radius:10px;padding:6px;background:#FAFAF6;border:2px solid transparent;cursor:pointer;transition:.15s}
+.cal-day:hover{border-color:var(--blue)}
+.cal-day.out{opacity:.3;cursor:default}
+.cal-day.out:hover{border-color:transparent}
+.cal-day.today{background:var(--blue-l);border-color:var(--blue)}
+.cal-day .dn{font-size:12px;color:var(--text3);font-weight:600;margin-bottom:4px}
+.cal-day .dn.today-num{color:var(--blue);font-weight:800}
+.cal-bar{font-size:11px;font-weight:600;padding:3px 6px;margin-bottom:3px;
+  color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.cal-bar.p-高{background:var(--err)} .cal-bar.p-中{background:var(--warn)} .cal-bar.p-低{background:var(--ok)}
+.cal-bar.s-start{border-radius:6px 0 0 6px}
+.cal-bar.s-mid{border-radius:0}
+.cal-bar.s-end{border-radius:0 6px 6px 0}
+.cal-bar.s-single{border-radius:6px}
+
+/* ===== Detail Modal ===== */
+#detail{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;padding:20px}
+#detail.on{display:flex}
+.dbox{background:#fff;border-radius:20px;width:min(600px,95vw);max-height:85vh;overflow:auto;padding:32px}
+.dbox h2{font-size:22px;margin-bottom:16px}
+.dclose{float:right;width:36px;height:36px;border-radius:10px;background:#F0F0EC;
+  display:flex;align-items:center;justify-content:center;font-size:18px;color:var(--text3)}
+.dclose:hover{background:var(--err-bg);color:var(--err)}
+.dfield{margin:14px 0}
+.dfield .dk{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px}
+.dfield .dv{font-size:15px;line-height:1.7;white-space:pre-wrap}
+.viewonly{margin-top:16px;padding:12px 16px;background:#F0F0EC;border-radius:10px;
+  font-size:13px;color:var(--text3);text-align:center}
+
+/* ===== Empty ===== */
+.empty{color:var(--text3);text-align:center;padding:40px;font-size:14px}
+
+/* ===== Print ===== */
+.print-bar{display:none}
+@media print{
+  header,.seg,.hdr-right,.progress-bar,.pbtn,.cal-nav,.dclose,.print-bar,#gate,#detail{display:none!important}
+  body{background:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  main{max-width:none;padding:0}
+  .card,.task,.stat,.cal,.kcol{box-shadow:none!important;border:1px solid #ccc!important;break-inside:avoid}
+  .task{margin-bottom:8px;padding:12px 16px}
+  .page-head h1{font-size:20px}
+  .stat .v{font-size:24px}
+  .kanban{gap:8px}
+  .cal-day{min-height:50px}
+}
 </style>
 </head>
 <body>
 
 <div id="gate">
-  <div class="gate-card">
-    <div class="gate-icon">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
-    </div>
+  <div class="gate-box">
+    <div class="gate-logo"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
     <h1>班委工作看板</h1>
-    <p>请输入你的专属密码</p>
-    <input id="pwd" type="password" autocomplete="off" placeholder="例如 ABCD-1234">
-    <button id="btn-unlock">进入</button>
+    <p>输入你的专属密码</p>
+    <input id="pwd" type="password" autocomplete="off" placeholder="ABCD-1234">
+    <button class="btn-main" id="btn-unlock">登 录</button>
     <div class="gate-err" id="gate-err"></div>
   </div>
 </div>
@@ -138,7 +207,7 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
 <div id="app" hidden>
   <header>
     <div class="brand">
-      <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>
+      <div class="brand-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg></div>
       班委工作看板
     </div>
     <div class="seg">
@@ -146,7 +215,11 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
       <button data-view="all">全部任务</button>
       <button data-view="cal">日历</button>
     </div>
-    <div class="who"><span id="who-txt"></span><button class="out" id="btn-out">退出</button></div>
+    <div class="hdr-right">
+      <button class="btn-sm yellow" id="btn-print">打印 / PDF</button>
+      <div class="who"><span id="who-txt"></span></div>
+      <button class="btn-sm outline" id="btn-out">退出</button>
+    </div>
   </header>
   <main>
     <section id="v-mine"></section>
@@ -155,372 +228,327 @@ main{max-width:1240px;margin:0 auto;padding:26px 24px 70px}
   </main>
 </div>
 
-<div id="detail"><div class="detail-box" id="detail-box"></div></div>
+<div id="detail"><div class="dbox" id="dbox"></div></div>
 
-<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-班长","iv":"MrAGZCzM7V1S7ifg","ct":"hKMiVofa154yIRUbzbRbv8x4RG5iETHkrqSuJcu6Cwbxev7B/JuvW+JQ/9a71f9+"},{"id":"研旅261-副班长","iv":"GmZ7NYLwyG3t8s8r","ct":"8FI1mGXmVjV3tuOMYrepDAYbPOaF1jiyPFP56JTOW0iOV4Uy1FOLA4OqLVfPzmOe"},{"id":"研旅261-团支书","iv":"vZnFZBni7a/6p5Me","ct":"s+yopUQZOb5kdwCCOUBBtzbx+D8cSSgQpigmQvr5iS26ybk0l5T/wVbBIbVbErDa"},{"id":"研旅261-学习委员","iv":"Vv+my+cOQVcKwWld","ct":"CICmKDTSxDgRvsDAqiLPRU0EJZ0XCBzFPar4GgvkOfKsj3t8XFrX92DyrFuQsW2D"},{"id":"研旅261-生活委员","iv":"l2zGM6Up3hW4zvQY","ct":"vQLOGnH1tKoOUlMCTVmpplqmoybKsNF6PbG0mRICmq5VXwFoaXHEzqnr9hqDIbl0"},{"id":"研旅261-文体委员","iv":"xw9FIHqCni43ABrN","ct":"bAfiYFbF6yvckBrdu24n3tDI8UfiOjdVdX9uVjfNsKpXSgPp8NdC65BQxVv/A/Hf"},{"id":"研旅261-心理委员","iv":"f1khSCW1amPE+YMh","ct":"LBgIOEhigpxT1rtDjNIUFSdPx7WEnVyetCBUxrpj3nzFnbr4veAGLWfcSNlCP+fJ"},{"id":"研旅261-宣传委员","iv":"agdl5JnsnqcPjw6R","ct":"at7KK213wRiSRwQe5r+3Cuu9W+3syHdLEHUt5ZlpWcEBWDCT3FXU6nrADg01auEl"},{"id":"营销261-班长","iv":"/7eVAiWBnfu1bohL","ct":"NtAISmi/dMgboHHyrSJREIJ6E1Qr9J4Vgdu6/ZHtG0BmB5V3W8iCJZ+g/d7tA61i"},{"id":"营销261-副班长","iv":"Z7i68JEw54SIlBUg","ct":"ilmo6xEbLW2V3FFKSbZ54YSndZ6hyz1bPXD1hdWjnX7YrR7ClVXEDHEMbjR9XPbZ"},{"id":"营销261-团支书","iv":"kIybun0+TejkH2Xh","ct":"vaVpmTaAFLaEpZ4UB97gUuBBJrTnXMExDpFYr51ufwJTXlXWPYaKanvU3Zb5VJAz"},{"id":"营销261-学习委员","iv":"+L/aKrPss+gYywwu","ct":"776g43HaRWBpckHhoaM3y7QesOL9PWkCGBi1Qy6pgFNz6EO+qjYXfIFIO8cgkllQ"},{"id":"营销261-生活委员","iv":"Kw2FJDE1Ap4zC6CN","ct":"i99QdPr8e0qw8VqEytxPuTaiTn0Xz/A+JvcVhy1TwPOsTH2WqRB3js/nhglwo7Hp"},{"id":"营销261-文体委员","iv":"yH7YSSCyJUZXW1Ez","ct":"eMBP/Cvt3VxBtEMnL6oFoeJadqYjjQITHTI6CSnEpGL544UGNyqogNthVadrmvF9"},{"id":"营销261-心理委员","iv":"dIgwoSWLknGVetyv","ct":"8QxPAFe511gKyiVy4hIREj1qHY19GAQvsy852jphgnwLaIZADdtIrwjrvOdqGAsN"},{"id":"营销261-宣传委员","iv":"XaSL54bJJKY+Wq5s","ct":"lPDAQTTV6O3PmoFxEusu0FzCrAKj0l/r1qXLlouRNOUuioXP/ovqj0L00D8dMIf+"},{"id":"营销262-班长","iv":"fFB73cWZxodlpbfe","ct":"Rlm/tdpo7fPTBr3DFlVWDRPKyyl3XXmAzZP6u4S7A+HMvDtG9vIh30TR/SaGJRnv"},{"id":"营销262-副班长","iv":"iTVIxRDjP6hutrL1","ct":"i5WMWQ/hdjquyYFYrta9uo3QW24mOkY/HeubEUUsEQsVoMpm/K54OJKFuuG/xANC"},{"id":"营销262-团支书","iv":"ge3HyPlxuFO+eUq3","ct":"EWV55PW1HNBjUlPyN5oVs9hh1xX296SFIcE/Y0cBKHyLVT3S30uFILA5PcuWTOzA"},{"id":"营销262-学习委员","iv":"9Ptjn/Mmem/G7dJU","ct":"M6NtyBrtIplgXWD4e65J+AVy2hFwv9upt/XLTRuwGVucX9mE2EoLNxnbUUyK0Tan"},{"id":"营销262-生活委员","iv":"Y70SL1bM8OCqmsTz","ct":"bGABHcqM5Wz0GHigHK0aMQEX2najpmSQDFMMuTXB4gbFnFyonTAoyGbJU5E4rjNS"},{"id":"营销262-文体委员","iv":"71VxxgbLmHa0zkK5","ct":"MLoD1IPBta/Yc2555UDsM+NzJUZT9CZ8ViqJfLSnL0xb1jK4JGWJHYBBR9P2YZ3U"},{"id":"营销262-心理委员","iv":"gEAYsTSvGVWCheoI","ct":"oXD+3LX9lG6uuV+OE/BqYU86uPpsF2rAdlvbYzjLv8cc4ty1Wp8pTHTRk9bFK6+D"},{"id":"营销262-宣传委员","iv":"EQMSi0rQ47LF96x4","ct":"kyY7vZg9fyBlS+9Q0p48K2n9hA02/yaYbWGrJXidY0okjKSMy4JQzg0LNCWOJpzu"}],"iv":"y8egp0hP0EFuJcmy","ct":"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","tokIv":"qrnAV97X1utIgltr","tokCt":"pir5O82kWQEWXIbdCxtic7bXe5uhPUdcxdrtH6yyOHOvyBl53nsgMTgKIc0649WywK3tL0mEIGlXlVQcoSkeSCikIs5y/Lf2owPmWcm7/K0/Xt89oLICLAjkQTZMLHjryGdZSzcL1pHVtzOXmavxgnFAs5B5ghOAIQ==","repo":"aot528800-hash/kanban"};</script>
+<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-班长","iv":"mS5KNPB8051EDVY9","ct":"rqpbsotWuP/HsV/ebQ/wukUWwIj53DbKcLl9GAbXcBs7XygZ3+aXfx6W+L6cOsmX"},{"id":"研旅261-副班长","iv":"AxAt0U2zsNPnslfT","ct":"RxpO7WPhKu0D480mI/a0vZt37qt4JSMUs885JeqkEq1gSAqleUUvYFbgXSb6BKT+"},{"id":"研旅261-团支书","iv":"bC4o9caB+KX1UAPo","ct":"WvrKXndF2TRlXOX4FIpDMuQQ42E7yIsfgeZJtymbzYqOEz3PXubTw54guLZWrfUb"},{"id":"研旅261-学习委员","iv":"jMhULvP+C5fLGd95","ct":"X0d+W+ZirXRfFnhUHgs38bnHO7OhwUYYHGBdkTSvBpYkFTKwf05YHBpTvbg8s8Yj"},{"id":"研旅261-生活委员","iv":"kyKoIH9JeizM/srR","ct":"15a/pB/RRcjRIzkwZJMorGlZdmT8BDptcGvjpo5ns7YYdHA228lmsK74VRkVihTE"},{"id":"研旅261-文体委员","iv":"+0jx4NQQnp1cK6Eb","ct":"vAVYlutgQZwShvygxAzXNmMeBd378SieGckMr04LhWOt00iAghqTyxMIxB5uG+1W"},{"id":"研旅261-心理委员","iv":"dIU4oujkCPBxoFOt","ct":"urWI4tzixfeIuNDAIotRHWVPRPRBIsHNiC2ymdV9vlO5LRRt+u2jlQm5RsDpu8zs"},{"id":"研旅261-宣传委员","iv":"cA/i97NKm9pAUq+V","ct":"BBYfjZWTtx4/yqw1kxnYgT8JIV3B4huMYcBVIS4TcEMX/BIL7Y3eLLOT2esgPztS"},{"id":"营销261-班长","iv":"aZJ+TE5kuhYCG/1U","ct":"Wdmgts+kkDaUxtDp0BkAUUwXbj4C2EhpC0E4o4Y3OyCMTIzyvwg5SrO7nJneAG0Q"},{"id":"营销261-副班长","iv":"IJFgBWuqf+onN+Du","ct":"CDhbeIg4qb9aiq5eRtcO4v14U2HEI4/2QMJm3iqxzNipIts0v4pp52pTVqVV0frl"},{"id":"营销261-团支书","iv":"Qvq4uir8Hzv+tE/6","ct":"bCOgZMuHacwrSabWACx72I9awImUk6grxD5CWpfnGb1AQ9FIOtlciXRk27qF2jRL"},{"id":"营销261-学习委员","iv":"6r24iPTpWTP6M5sb","ct":"M6U/dl8OSvTlEdV8jsfGZb+d9JPdyD+7Akfcy4h7b5eJxhkmoseZanh3YmLDNKd/"},{"id":"营销261-生活委员","iv":"IZwcYgiT2SBYG+h3","ct":"SlAt1fqLpJJws6MUDkS0Y1gMP5QbR5q8TcrV8GpTgcA/F5MF2hvEOqQnLNrqZyz7"},{"id":"营销261-文体委员","iv":"lyivywOidd0dkM3N","ct":"pyc1rB+Yw8tN4/dyZWouMmS+jhaMYMAEB5b9YKlrHdHpPkuTm/MKXE53XQCJyntn"},{"id":"营销261-心理委员","iv":"PjNHeUU+R3Ao+RI7","ct":"d21Q0rLiw60YdsKpjajQHtov6PlFeLy8wSWfcV7tSeObM+XSKHCS+xeVEY8upWV9"},{"id":"营销261-宣传委员","iv":"qXpHORNh0HbueF/p","ct":"HsXhDHCbxbtBGK059FFComix/o67idsB20mJ+smBmwHGpKWzvIFPxzeVa8ptQUJ6"},{"id":"营销262-班长","iv":"dHCaHJkK0C6KW3oy","ct":"bI69lLXayLxsukFPPiiYsbKFq8MyhtcYrUZRsB2TEe5s0idQru2R3x9HC/w7p8to"},{"id":"营销262-副班长","iv":"lpAkIlJgQkuq5Cek","ct":"nrDpjg7GjkhkGANqKh2lHeUsTF2PWzmS1Zt1iRg26XGWwBx17Pek4d8bk4+34TMD"},{"id":"营销262-团支书","iv":"+wLWNlE2Y8vDlRMT","ct":"xHXTQ92XMnUETenky/SsqjWiFnBESA39Ak8XKRZjrnOp5K7VXMa2T9zZYjZV8w2x"},{"id":"营销262-学习委员","iv":"iyre/nL9Uf2IVUY6","ct":"tZByqkisqmbgZ0kYHWxEVPoPWzEOMulUrHPlp/GmyyvIELYXVWIOUq2t5Oz3xaYO"},{"id":"营销262-生活委员","iv":"fdJjYzsxHb+NrafW","ct":"uV26mD3NAgeeb/pxANBWKbqaANFcGET/fDYUH5QYNUfndXA421DXOrpIO44xJmQY"},{"id":"营销262-文体委员","iv":"/W6A1xvAv8ZLoc+X","ct":"lVg3lLgp4uYUJVZURvBQ6dK8B3uYGNNU+R3ogPXXPDbrY2kpaS9yL5bJhBFUxCWV"},{"id":"营销262-心理委员","iv":"6YTvoBxy+fDVKETL","ct":"3qI7lg6/A8frcxguHWI3BSh97RppEtRSMFP3DucBcDes24AnHP39YvcK+6S56Zvg"},{"id":"营销262-宣传委员","iv":"E/7RtYsPwS/TBjIE","ct":"qIXaEnoHweOip6MJ8w/SODFFXEVxSFU1gC0ycThLPfjHcwz/v6Ub8F/weT9Gwa3V"}],"iv":"RBggAkslS55DWyTR","ct":"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","tokIv":null,"tokCt":null,"repo":"aot528800-hash/kanban"};</script>
 <script>
 "use strict";
-let DATA = null, ME = null;
-const $ = (s,r=document)=>r.querySelector(s);
-const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
-const esc = s => String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const b64d = s => Uint8Array.from(atob(s), c=>c.charCodeAt(0));
-const today = () => new Date().toISOString().slice(0,10);
-const daysLeft = due => {
-  if(!due) return null;
-  return Math.round((new Date(due+'T00:00:00') - new Date(today()+'T00:00:00'))/86400000);
+let DATA=null,ME=null,SHARED={};
+const $=s=>document.querySelector(s);
+const $$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const b64d=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const today=()=>new Date().toISOString().slice(0,10);
+const pad=n=>String(n).padStart(2,'0');
+const daysLeft=d=>d?Math.round((new Date(d+'T00:00:00')-new Date(today()+'T00:00:00'))/86400000):null;
+const dateRange=(s,e)=>{
+  const a=new Date((s||e)+'T00:00:00'), b=new Date((e||s)+'T00:00:00');
+  const out=[]; for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)) out.push(d.toISOString().slice(0,10));
+  return out;
 };
 
-/* ---------- 勾选状态（localStorage） ---------- */
-function myState(taskId){
-  const key = 'kb_done_' + ME + '_' + taskId;
-  return localStorage.getItem(key) || '';
-}
-function setMyState(taskId, val){
-  const key = 'kb_done_' + ME + '_' + taskId;
-  if(val) localStorage.setItem(key, val);
-  else localStorage.removeItem(key);
-}
-function isDoneByMe(t){
-  return myState(t.id) === 'done' || myState(t.id) === 'submitted';
-}
-
-/* ---------- 解密 ---------- */
+/* ===== 解密 ===== */
 async function unlock(pwd){
-  const enc = new TextEncoder();
-  const B = window.__BLOB__;
-  const km = await crypto.subtle.importKey('raw', enc.encode(pwd), 'PBKDF2', false, ['deriveKey']);
-  const key = await crypto.subtle.deriveKey(
-    {name:'PBKDF2', salt:b64d(B.salt), iterations:B.iter, hash:'SHA-256'},
-    km, {name:'AES-GCM', length:256}, false, ['decrypt']);
+  const enc=new TextEncoder(),B=window.__BLOB__;
+  const km=await crypto.subtle.importKey('raw',enc.encode(pwd),'PBKDF2',false,['deriveKey']);
+  const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(B.salt),iterations:B.iter,hash:'SHA-256'},
+    km,{name:'AES-GCM',length:256},false,['decrypt']);
   for(const s of B.slots){
     try{
-      const rawK = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(s.iv)}, key, b64d(s.ct));
-      const k = await crypto.subtle.importKey('raw', rawK, 'AES-GCM', false, ['decrypt']);
-      const pt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(B.iv)}, k, b64d(B.ct));
-      let tok = null;
-      if(B.tokCt){
-        try{
-          const tokPt = await crypto.subtle.decrypt({name:'AES-GCM', iv:b64d(B.tokIv)}, k, b64d(B.tokCt));
-          tok = JSON.parse(new TextDecoder().decode(tokPt)).token;
-        }catch(e){}
-      }
-      return { me: s.id, data: JSON.parse(new TextDecoder().decode(pt)), token: tok, repo: B.repo };
+      const rawK=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(s.iv)},key,b64d(s.ct));
+      const k=await crypto.subtle.importKey('raw',rawK,'AES-GCM',false,['decrypt']);
+      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.iv)},k,b64d(B.ct));
+      let tok=null;
+      if(B.tokCt){try{const tp=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.tokIv)},k,b64d(B.tokCt));tok=JSON.parse(new TextDecoder().decode(tp)).token;}catch(e){}}
+      return{me:s.id,data:JSON.parse(new TextDecoder().decode(pt)),token:tok,repo:B.repo};
     }catch(e){}
   }
   throw new Error('bad');
 }
 
-/* ---------- 共享状态（GitHub API） ---------- */
-let SHARED = {};
+/* ===== 共享状态 ===== */
 async function loadShared(){
-  try{
-    const r = await fetch('https://raw.githubusercontent.com/aot528800-hash/kanban/main/state.json?t=' + Date.now());
-    if(r.ok) SHARED = await r.json();
-    else SHARED = {};
-  }catch(e){ SHARED = {}; }
+  try{const r=await fetch('https://raw.githubusercontent.com/aot528800-hash/kanban/main/state.json?t='+Date.now());
+    if(r.ok)SHARED=await r.json();else SHARED={};
+  }catch(e){SHARED={};}
 }
 async function saveShared(){
-  if(!window.__TOKEN__) return false;
+  if(!window.__TOKEN__)return false;
   try{
-    const content = btoa(unescape(encodeURIComponent(JSON.stringify(SHARED))));
-    let sha = null;
-    try{
-      const r = await fetch('https://api.github.com/repos/' + window.__REPO__ + '/contents/state.json', {
-        headers: { Authorization: 'token ' + window.__TOKEN__ }
-      });
-      if(r.ok){ sha = (await r.json()).sha; }
-    }catch(e){}
-    const body = { message: 'update state', content };
-    if(sha) body.sha = sha;
-    const r2 = await fetch('https://api.github.com/repos/' + window.__REPO__ + '/contents/state.json', {
-      method: 'PUT',
-      headers: { Authorization: 'token ' + window.__TOKEN__, 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(SHARED))));
+    let sha=null;
+    try{const r=await fetch('https://api.github.com/repos/'+window.__REPO__+'/contents/state.json',{headers:{Authorization:'token '+window.__TOKEN__}});
+      if(r.ok)sha=(await r.json()).sha;}catch(e){}
+    const body={message:'update',content};if(sha)body.sha=sha;
+    const r2=await fetch('https://api.github.com/repos/'+window.__REPO__+'/contents/state.json',{
+      method:'PUT',headers:{Authorization:'token '+window.__TOKEN__,'Content-Type':'application/json'},body:JSON.stringify(body)});
     return r2.ok;
-  }catch(e){ return false; }
+  }catch(e){return false;}
 }
-function sharedStatus(taskId){
-  const s = SHARED[ME] || {};
-  return s[taskId] || '';
+function myState(tid){const s=SHARED[ME]||{};const st=s[tid]||{};return{p:st.p||'todo',s:!!st.s};}
+function setMyState(tid,progress,submitted){
+  if(!SHARED[ME])SHARED[ME]={};
+  const cur=SHARED[ME][tid]||{p:'todo',s:false};
+  if(progress!==undefined)cur.p=progress;
+  if(submitted!==undefined)cur.s=submitted;
+  SHARED[ME][tid]=cur;
+  saveShared();
 }
-function sharedCount(taskId){
-  const all = Object.values(SHARED);
-  const done = all.filter(p => p[taskId] === 'done' || p[taskId] === 'submitted').length;
-  const total = (DATA.people || []).length;
-  return { done, total };
+function sharedStats(tid){
+  const all=Object.values(SHARED);
+  const done=all.filter(p=>p[tid]&&p[tid].p==='done').length;
+  const doing=all.filter(p=>p[tid]&&p[tid].p==='doing').length;
+  return{done,doing,total:(DATA.people||[]).length};
 }
 
-$('#btn-unlock').onclick = async ()=>{
-  const pwd = $('#pwd').value.trim();
-  if(!pwd){ $('#gate-err').textContent = '请输入密码'; return; }
-  $('#gate-err').textContent = '';
-  $('#btn-unlock').textContent = '正在解密…';
-  try{
-    const r = await unlock(pwd);
-    ME = r.me; DATA = r.data;
-    window.__TOKEN__ = r.token;
-    window.__REPO__ = r.repo || 'aot528800-hash/kanban';
-    await loadShared();
-    $('#gate').style.display = 'none';
-    $('#app').hidden = false;
-    init();
-  }catch(e){
-    $('#gate-err').textContent = '密码不正确';
-    $('#btn-unlock').textContent = '进入';
-  }
-};
-$('#pwd').addEventListener('keydown', e=>{ if(e.key === 'Enter') $('#btn-unlock').click(); });
-$('#btn-out').onclick = ()=> location.reload();
-
-/* ---------- 工具 ---------- */
-function personOf(id){ return (DATA.people||[]).find(p=>p.id===id); }
-function myRole(){
-  const p = personOf(ME);
-  return p ? p.role : '';
-}
+/* ===== 工具 ===== */
+function personOf(id){return(DATA.people||[]).find(p=>p.id===id);}
+function myRole(){const p=personOf(ME);return p?p.role:'';}
 function roleLabel(t){
-  if(t.roles.includes('全体')) return '全体班委';
+  if(t.roles.includes('全体'))return'全体班委';
   return t.roles.map(r=>{
-    const same = (DATA.people||[]).filter(p=>p.role===r);
-    const names = same.filter(p=>p.name).map(p=>p.name);
-    return names.length ? `${r}（${names.join('、')}）` : r;
+    const same=(DATA.people||[]).filter(p=>p.role===r);
+    const names=same.filter(p=>p.name).map(p=>p.name);
+    return names.length?`${r}（${names.join('、')}）`:r;
   }).join('、');
 }
-function isMine(t){
-  if(t.roles.includes('全体')) return true;
-  return t.roles.includes(myRole());
-}
-const STATUS = ['待办','进行中','已完成'];
+function isMine(t){if(t.roles.includes('全体'))return true;return t.roles.includes(myRole());}
 
-/* ---------- 路由 ---------- */
+/* ===== 路由 ===== */
 function show(v){
-  ['mine','all','cal'].forEach(x=>{
-    const el = $('#v-'+x); if(el) el.hidden = (x!==v);
-  });
-  $$('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.view===v));
-  if(v==='mine') renderMine();
-  if(v==='all') renderAll();
-  if(v==='cal') renderCal();
+  ['mine','all','cal'].forEach(x=>{const el=$('#v-'+x);if(el)el.hidden=x!==v;});
+  $$('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
+  if(v==='mine')renderMine();
+  if(v==='all')renderAll();
+  if(v==='cal')renderCal();
   window.scrollTo(0,0);
 }
-$$('.seg button').forEach(b=> b.onclick = ()=> show(b.dataset.view));
+$$('.seg button').forEach(b=>b.onclick=()=>show(b.dataset.view));
+$('#btn-print').onclick=()=>window.print();
+$('#btn-out').onclick=()=>location.reload();
 
-function init(){
-  const p = personOf(ME);
-  $('#who-txt').innerHTML = p
-    ? `<b>${esc(p.name || p.role)}</b>　${esc(p.class)} · ${esc(p.role)}`
-    : esc(ME);
-  show('mine');
-}
+$('#btn-unlock').onclick=async()=>{
+  const pwd=$('#pwd').value.trim();
+  if(!pwd){$('#gate-err').textContent='请输入密码';return;}
+  $('#gate-err').textContent='';$('#btn-unlock').textContent='登录中…';
+  try{
+    const r=await unlock(pwd);
+    ME=r.me;DATA=r.data;window.__TOKEN__=r.token;window.__REPO__=r.repo||'aot528800-hash/kanban';
+    await loadShared();
+    $('#gate').style.display='none';$('#app').hidden=false;
+    const p=personOf(ME);
+    $('#who-txt').innerHTML=p?`<b>${esc(p.name||p.role)}</b> ${esc(p.class)}·${esc(p.role)}`:esc(ME);
+    show('mine');
+  }catch(e){$('#gate-err').textContent='密码不正确';$('#btn-unlock').textContent='登录';}
+};
+$('#pwd').addEventListener('keydown',e=>{if(e.key==='Enter')$('#btn-unlock').click();});
 
-/* ---------- 我的任务 ---------- */
+/* ===== 我的任务 ===== */
 function renderMine(){
-  const all = DATA.tasks;
-  const mine = all.filter(isMine);
-  const todo = mine.filter(t=>t.status!=='已完成');
-  const done = mine.filter(t=>t.status==='已完成' || isDoneByMe(t));
-  const myDone = mine.filter(t=>isDoneByMe(t)).length;
-  const high = todo.filter(t=>t.priority==='高' && !isDoneByMe(t)).length;
-  const soon = todo.filter(t=>{ const d=daysLeft(t.due); return d!==null && d<=3 && d>=0 && !isDoneByMe(t); }).length;
+  const all=DATA.tasks;
+  const mine=all.filter(isMine);
+  const todo=mine.filter(t=>myState(t.id).p==='todo');
+  const doing=mine.filter(t=>myState(t.id).p==='doing');
+  const done=mine.filter(t=>myState(t.id).p==='done');
+  const submitted=mine.filter(t=>myState(t.id).s);
 
-  $('#v-mine').innerHTML = `
-    <div class="page-head">
-      <h1>我的任务</h1>
-      <p>更新于 ${esc(DATA.updated)} · 岗位「${esc(myRole())}」 · 共 ${mine.length} 项</p>
-    </div>
+  $('#v-mine').innerHTML=`
+    <div class="page-head"><h1>我的任务</h1>
+      <p>更新于 ${esc(DATA.updated)} · 岗位「${esc(myRole())}」 · 共 ${mine.length} 项</p></div>
     <div class="stat-row">
-      <div class="stat"><div class="k">待完成</div><div class="v">${todo.filter(t=>!isDoneByMe(t)).length}</div></div>
-      <div class="stat"><div class="k">高优先级</div><div class="v" style="color:var(--red)">${high}</div></div>
-      <div class="stat"><div class="k">3 天内截止</div><div class="v" style="color:var(--orange)">${soon}</div></div>
-      <div class="stat"><div class="k">我已完成</div><div class="v" style="color:var(--accent)">${myDone}</div></div>
+      <div class="stat"><div class="k">待办</div><div class="v">${todo.length}</div></div>
+      <div class="stat"><div class="k">进行中</div><div class="v blue">${doing.length}</div></div>
+      <div class="stat"><div class="k">已完成</div><div class="v green">${done.length}</div></div>
+      <div class="stat"><div class="k">已提交辅导员</div><div class="v orange">${submitted.length}</div></div>
     </div>
-    ${mine.length ? mine.map(t=>taskCard(t, true)).join('') : '<div class="card"><div class="empty">暂时没有分配给你岗位的任务</div></div>'}
-  `;
+    ${mine.length?mine.map(t=>taskCard(t,true)).join(''):'<div class="card"><div class="empty">暂时没有分配给你岗位的任务</div></div>'}`;
   bindCards();
 }
 
-function taskCard(t, showCheck){
-  const d = daysLeft(t.due);
-  const myDone = isDoneByMe(t);
-  let dueHtml = t.due ? esc(t.due) : '未设';
-  if(t.status !== '已完成' && d !== null && !myDone){
-    if(d < 0) dueHtml = `<span class="due-soon">已逾期 ${-d} 天</span>`;
-    else if(d === 0) dueHtml = `<span class="due-soon">今天截止</span>`;
-    else if(d <= 3) dueHtml = `<span class="due-soon">${dueHtml}（还剩 ${d} 天）</span>`;
+function taskCard(t,showCtrl){
+  const ms=myState(t.id);
+  const sc=sharedStats(t.id);
+  const d=daysLeft(t.due);
+  const isDone=ms.p==='done';
+  let dueH=t.due?esc(t.due):'未设';
+  if(!isDone&&d!==null){
+    if(d<0)dueH=`<span class="due-soon">已逾期 ${-d} 天</span>`;
+    else if(d===0)dueH='<span class="due-soon">今天截止</span>';
+    else if(d<=3)dueH=`<span class="due-soon">${dueH}（还剩 ${d} 天）</span>`;
   }
-  const state = myState(t.id);
-  return `<div class="task p-${esc(t.priority||'低')} ${myDone?'done':''}" data-id="${esc(t.id)}">
-    <h3>${myDone?'✓ ':''}${esc(t.title)}</h3>
+  const progressLabel=ms.p==='doing'?'<span class="pill blue">进行中</span>':ms.p==='done'?'<span class="pill green">已完成</span>':'<span class="pill gray">待办</span>';
+  return`<div class="task p-${esc(t.priority||'低')} ${isDone?'st-done':''}" data-id="${esc(t.id)}">
+    <h3>${esc(t.title)}</h3>
     <div class="meta">
-      <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority||'低')}</span>
+      <span class="pill ${t.priority==='高'?'red':t.priority==='中'?'orange':'green'}">${esc(t.priority||'低')}</span>
       <span class="pill blue">${esc(t.dept||'—')}</span>
-      <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
-      <span>截止：${dueHtml}</span>
+      ${progressLabel}
+      ${t.needs_submit?'<span class="pill yellow">需提交辅导员</span>':''}
+      <span>截止：${dueH}</span>
       <span>负责：${esc(roleLabel(t))}</span>
     </div>
-    ${showCheck ? `<div class="check-bar">
-      <span class="chk ${state==='done'?'on':''}" data-tid="${esc(t.id)}" data-act="done">✓ 我已完成</span>
-      <span class="chk ${state==='submitted'?'on-orange':''}" data-tid="${esc(t.id)}" data-act="submitted">已提交辅导员</span>
-      ${state?`<span class="chk" data-tid="${esc(t.id)}" data-act="clear">撤销</span>`:''}
-    </div>` : ''}
-    ${(()=>{
-      const sc = sharedCount(t.id);
-      if(sc.done > 0) return `<div style="margin-top:8px;font-size:12px;color:var(--label3)">👥 ${sc.done}/${sc.total} 人已完成</div>`;
-      return '';
-    })()}
+    ${sc.done+sc.doing>0?`<div class="progress-info">
+      ${sc.doing?`<span class="dot doing"></span>${sc.doing} 人进行中`:''}
+      ${sc.done?`<span class="dot done"></span>${sc.done}/${sc.total} 人已完成`:''}
+    </div>`:''}
+    ${showCtrl?`<div class="progress-bar">
+      ${ms.p==='todo'?`<button class="pbtn doing" data-tid="${esc(t.id)}" data-act="start">▶ 开始做</button>`:''}
+      ${ms.p==='doing'?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
+      ${ms.p==='done'?`<button class="pbtn done" disabled>✓ 已完成</button>`:''}
+      ${t.needs_submit?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
+      ${ms.p!=='todo'?`<button class="pbtn undo" data-tid="${esc(t.id)}" data-act="reset">撤销</button>`:''}
+    </div>`:''}
   </div>`;
 }
 
 function bindCards(){
   $$('.task[data-id]').forEach(el=>{
-    el.addEventListener('click', e=>{
-      if(e.target.classList.contains('chk')) return;
+    el.addEventListener('click',e=>{
+      if(e.target.classList.contains('pbtn'))return;
       openDetail(el.dataset.id);
     });
   });
-  $$('.chk[data-tid]').forEach(el=>{
-    el.onclick = e=>{
+  $$('.pbtn[data-tid]').forEach(el=>{
+    el.onclick=e=>{
       e.stopPropagation();
-      const tid = el.dataset.tid;
-      const act = el.dataset.act;
-      const cur = myState(tid);
-      if(act === 'clear'){ setMyState(tid, ''); if(SHARED[ME]) delete SHARED[ME][tid]; }
-      else if(cur === act){ setMyState(tid, ''); if(SHARED[ME]) delete SHARED[ME][tid]; }
-      else { setMyState(tid, act); if(!SHARED[ME]) SHARED[ME]={}; SHARED[ME][tid] = act; }
-      saveShared();
-      const active = $('.seg button.on');
-      if(active) show(active.dataset.view);
+      const tid=el.dataset.tid,act=el.dataset.act;
+      const ms=myState(tid);
+      if(act==='start')setMyState(tid,'doing');
+      else if(act==='finish')setMyState(tid,'done');
+      else if(act==='submit')setMyState(tid,undefined,!ms.s);
+      else if(act==='reset')setMyState(tid,'todo',false);
+      const active=$('.seg button.on');if(active)show(active.dataset.view);
     };
   });
 }
 
-/* ---------- 全部任务（看板） ---------- */
+/* ===== 全部任务 ===== */
 function renderAll(){
-  const cols = STATUS.map(st=>{
-    const list = DATA.tasks.filter(t=>t.status===st);
-    return `<div class="col">
-      <h3>${st}<span>${list.length}</span></h3>
-      ${list.map(t=>taskCard(t, isMine(t))).join('') || '<div class="empty" style="padding:16px">无</div>'}
-    </div>`;
+  const cols=['待办','进行中','已完成'].map(st=>{
+    const list=DATA.tasks.filter(t=>{
+      if(st==='已完成')return t.status==='已完成';
+      if(st==='进行中')return t.status==='进行中';
+      return t.status!=='已完成'&&t.status!=='进行中';
+    });
+    return`<div class="kcol"><h3>${st}<span class="count">${list.length}</span></h3>
+      ${list.map(t=>taskCard(t,isMine(t))).join('')||'<div class="empty">无</div>'}</div>`;
   }).join('');
-  $('#v-all').innerHTML = `
-    <div class="page-head"><h1>全部任务</h1>
-      <p>共 ${DATA.tasks.length} 项 · 所有班委可见 · 岗位制分配</p></div>
+  $('#v-all').innerHTML=`<div class="page-head"><h1>全部任务</h1>
+    <p>共 ${DATA.tasks.length} 项 · 所有班委可见 · 岗位制分配</p></div>
     <div class="kanban">${cols}</div>`;
   bindCards();
 }
 
-/* ---------- 日历 ---------- */
-let CAL_Y = new Date().getFullYear(), CAL_M = new Date().getMonth();
+/* ===== 日历（多天支持） ===== */
+let CY=new Date().getFullYear(),CM=new Date().getMonth();
 function renderCal(){
-  const first = new Date(CAL_Y, CAL_M, 1);
-  const startDow = (first.getDay() + 6) % 7;
-  const daysIn = new Date(CAL_Y, CAL_M+1, 0).getDate();
-  const cells = [];
-  for(let i=0;i<startDow;i++) cells.push(null);
-  for(let d=1; d<=daysIn; d++) cells.push(d);
+  const first=new Date(CY,CM,1);
+  const startDow=(first.getDay()+6)%7;
+  const daysIn=new Date(CY,CM+1,0).getDate();
+  const cells=[];
+  for(let i=0;i<startDow;i++)cells.push(null);
+  for(let d=1;d<=daysIn;d++)cells.push(d);
 
-  const byDay = {};
+  // 任务按日期展开
+  const byDay={};
   DATA.tasks.forEach(t=>{
-    if(t.due){
-      const dt = t.due.slice(0,10);
-      (byDay[dt] = byDay[dt] || []).push(t);
-    }
+    const dates=dateRange(t.start,t.due);
+    dates.forEach((dt,i)=>{
+      if(!byDay[dt])byDay[dt]=[];
+      const cls=i===0&&dates.length>1?'s-start':i===dates.length-1&&dates.length>1?'s-end':dates.length>1?'s-mid':'s-single';
+      byDay[dt].push({t,span:cls});
+    });
   });
 
-  const pad = n => String(n).padStart(2,'0');
-  const htmlCells = cells.map(d=>{
-    if(!d) return '<div class="cal-day out"></div>';
-    const key = `${CAL_Y}-${pad(CAL_M+1)}-${pad(d)}`;
-    const list = byDay[key] || [];
-    const isToday = key === today();
-    return `<div class="cal-day ${isToday?'today':''}" data-day="${key}">
-      <div class="n">${d}</div>
-      ${list.slice(0,2).map(t=>`<div class="dot ${t.priority==='高'?'high':(t.priority==='中'?'mid':'low')}">${esc(t.title)}</div>`).join('')}
-      ${list.length>2?`<div class="n">等 ${list.length} 项</div>`:''}
+  const html=cells.map(d=>{
+    if(!d)return'<div class="cal-day out"></div>';
+    const key=`${CY}-${pad(CM+1)}-${pad(d)}`;
+    const list=byDay[key]||[];
+    const isToday=key===today();
+    return`<div class="cal-day ${isToday?'today':''}" data-day="${key}">
+      <div class="dn ${isToday?'today-num':''}">${d}</div>
+      ${list.slice(0,3).map(x=>`<div class="cal-bar p-${esc(x.t.priority||'低')} ${x.span}" data-tid="${esc(x.t.id)}">${esc(x.t.title)}</div>`).join('')}
+      ${list.length>3?`<div class="dn">+${list.length-3} 项</div>`:''}
     </div>`;
   }).join('');
 
-  $('#v-cal').innerHTML = `
-    <div class="page-head"><h1>日历</h1><p>按截止日期查看 · 点某天看当天任务</p></div>
+  $('#v-cal').innerHTML=`
+    <div class="page-head"><h1>日历</h1><p>按时间查看 · 多天任务显示为横条 · 点某天看当天任务</p></div>
     <div class="cal">
-      <div class="cal-head">
-        <h2>${CAL_Y} 年 ${CAL_M+1} 月</h2>
-        <div class="cal-nav"><button id="cal-prev">‹</button><button id="cal-next">›</button></div>
-      </div>
-      <div class="cal-grid">
-        ${['一','二','三','四','五','六','日'].map(x=>`<div class="cal-dow">${x}</div>`).join('')}
-        ${htmlCells}
-      </div>
+      <div class="cal-head"><h2>${CY} 年 ${CM+1} 月</h2>
+        <div class="cal-nav"><button id="cal-prev">‹</button><button id="cal-next">›</button></div></div>
+      <div class="cal-grid">${['一','二','三','四','五','六','日'].map(x=>`<div class="cal-dow">${x}</div>`).join('')}${html}</div>
     </div>`;
-
-  $('#cal-prev').onclick = ()=>{ CAL_M--; if(CAL_M<0){CAL_M=11;CAL_Y--;} renderCal(); };
-  $('#cal-next').onclick = ()=>{ CAL_M++; if(CAL_M>11){CAL_M=0;CAL_Y++;} renderCal(); };
-  $$('.cal-day[data-day]').forEach(el=> el.onclick = ()=> openDay(el.dataset.day));
+  $('#cal-prev').onclick=()=>{CM--;if(CM<0){CM=11;CY--;}renderCal();};
+  $('#cal-next').onclick=()=>{CM++;if(CM>11){CM=0;CY++;}renderCal();};
+  $$('.cal-day[data-day]').forEach(el=>el.onclick=e=>{
+    if(e.target.classList.contains('cal-bar')){openDetail(e.target.dataset.tid);return;}
+    openDay(el.dataset.day);
+  });
+  $$('.cal-bar[data-tid]').forEach(el=>el.onclick=e=>{e.stopPropagation();openDetail(el.dataset.tid);});
 }
 
 function openDay(key){
-  const list = DATA.tasks.filter(t=>t.due && t.due.slice(0,10)===key);
-  $('#detail-box').innerHTML = `
-    <button class="close" onclick="closeDetail()">×</button>
+  const list=DATA.tasks.filter(t=>{
+    const dates=dateRange(t.start,t.due);
+    return dates.includes(key);
+  });
+  $('#dbox').innerHTML=`<button class="dclose" onclick="closeDetail()">×</button>
     <h2>${esc(key)}</h2>
-    ${list.length ? list.map(t=>`<div style="margin:14px 0;padding:14px;background:#FAFBF8;border-radius:10px">
-      <div style="font-weight:600;margin-bottom:6px">${esc(t.title)}</div>
-      <div class="meta" style="font-size:12.5px;color:var(--label3)">
-        ${esc(t.dept)} · ${esc(t.status)} · 负责：${esc(roleLabel(t))}
-      </div></div>`).join('') : '<div class="empty">这一天没有任务</div>'}`;
+    ${list.length?list.map(t=>`<div style="margin:12px 0;padding:16px;background:#FAFAF6;border-radius:12px">
+      <div style="font-weight:700;margin-bottom:6px">${esc(t.title)}</div>
+      <div style="font-size:13px;color:var(--text3)">${esc(t.dept)} · ${esc(t.status)} · ${esc(roleLabel(t))}</div>
+    </div>`).join(''):'<div class="empty">这一天没有任务</div>'}`;
   $('#detail').classList.add('on');
 }
 
-/* ---------- 详情 ---------- */
+/* ===== 详情 ===== */
 function openDetail(id){
-  const t = DATA.tasks.find(x=>x.id===id);
-  if(!t) return;
-  const d = daysLeft(t.due);
-  const state = myState(t.id);
-  const dueNote = (t.status!=='已完成' && d!==null)
-    ? (d<0 ? `（已逾期 ${-d} 天）` : d===0 ? '（今天截止）' : `（还剩 ${d} 天）`) : '';
-  const stateLabel = state==='done' ? '✓ 你已标记完成' : state==='submitted' ? '你已标记提交辅导员' : '';
-  $('#detail-box').innerHTML = `
-    <button class="close" onclick="closeDetail()">×</button>
+  const t=DATA.tasks.find(x=>x.id===id);if(!t)return;
+  const ms=myState(t.id),sc=sharedStats(t.id),d=daysLeft(t.due);
+  const mine=isMine(t);
+  const dueNote=(t.status!=='已完成'&&d!==null)?(d<0?`（已逾期 ${-d} 天）`:d===0?'（今天截止）':`（还剩 ${d} 天）`):'';
+  const progressLabel=ms.p==='doing'?'<span class="pill blue">进行中</span>':ms.p==='done'?'<span class="pill green">已完成</span>':'<span class="pill gray">待办</span>';
+  $('#dbox').innerHTML=`
+    <button class="dclose" onclick="closeDetail()">×</button>
     <h2>${esc(t.title)}</h2>
-    <div style="margin-bottom:14px">
-      <span class="pill ${t.priority==='高'?'red':(t.priority==='中'?'orange':'green')}">${esc(t.priority)}</span>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+      <span class="pill ${t.priority==='高'?'red':t.priority==='中'?'orange':'green'}">${esc(t.priority)}</span>
       <span class="pill blue">${esc(t.dept)}</span>
-      <span class="pill ${t.status==='已完成'?'green':''}">${esc(t.status)}</span>
-      ${stateLabel?`<span class="pill green">${esc(stateLabel)}</span>`:''}
+      ${progressLabel}
+      ${t.needs_submit?'<span class="pill yellow">需提交辅导员</span>':''}
     </div>
-    <div class="field"><div class="k">负责岗位</div><div class="v">${esc(roleLabel(t))}</div></div>
-    <div class="field"><div class="k">时间</div><div class="v">开始 ${esc(t.start||'—')}　截止 ${esc(t.due||'—')} ${esc(dueNote)}</div></div>
-    ${t.detail?`<div class="field"><div class="k">具体要求</div><div class="v">${esc(t.detail)}</div></div>`:''}
-    ${t.deliverable?`<div class="field"><div class="k">需要交什么</div><div class="v">${esc(t.deliverable)}</div></div>`:''}
-    ${t.note?`<div class="field"><div class="k">备注</div><div class="v">${esc(t.note)}</div></div>`:''}
-    ${isMine(t) ? `<div class="check-bar" style="margin-top:16px">
-      <span class="chk ${state==='done'?'on':''}" data-tid="${esc(t.id)}" data-act="done">✓ 我已完成</span>
-      <span class="chk ${state==='submitted'?'on-orange':''}" data-tid="${esc(t.id)}" data-act="submitted">已提交辅导员</span>
-      ${state?`<span class="chk" data-tid="${esc(t.id)}" data-act="clear">撤销</span>`:''}
-    </div>
-    <div class="empty" style="margin-top:12px;font-size:12px">勾选状态保存在你自己的浏览器里，其他人看不到。</div>` : `<div class="empty" style="margin-top:16px;font-size:12px;color:var(--label3)">这项任务不归你负责，只能查看。</div>`}`;
-  $$('#detail-box .chk[data-tid]').forEach(el=>{
-    el.onclick = ()=>{
-      const tid = el.dataset.tid;
-      const act = el.dataset.act;
-      const cur = myState(tid);
-      if(act === 'clear'){ setMyState(tid, ''); }
-      else if(cur === act){ setMyState(tid, ''); }
-      else { setMyState(tid, act); }
+    <div class="dfield"><div class="dk">负责岗位</div><div class="dv">${esc(roleLabel(t))}</div></div>
+    <div class="dfield"><div class="dk">时间</div><div class="dv">开始 ${esc(t.start||'—')}　截止 ${esc(t.due||'—')} ${esc(dueNote)}</div></div>
+    ${t.detail?`<div class="dfield"><div class="dk">具体要求</div><div class="dv">${esc(t.detail)}</div></div>`:''}
+    ${t.deliverable?`<div class="dfield"><div class="dk">需要交什么</div><div class="dv">${esc(t.deliverable)}</div></div>`:''}
+    ${t.note?`<div class="dfield"><div class="dk">备注</div><div class="dv">${esc(t.note)}</div></div>`:''}
+    ${sc.done+sc.doing>0?`<div class="dfield"><div class="dk">进度</div><div class="dv">
+      ${sc.doing?`${sc.doing} 人进行中　`:''}${sc.done}/${sc.total} 人已完成</div></div>`:''}
+    ${mine?`<div class="progress-bar" style="margin-top:18px">
+      ${ms.p==='todo'?`<button class="pbtn doing" data-tid="${esc(t.id)}" data-act="start">▶ 开始做</button>`:''}
+      ${ms.p==='doing'?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
+      ${ms.p==='done'?`<button class="pbtn done" disabled>✓ 已完成</button>`:''}
+      ${t.needs_submit?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
+      ${ms.p!=='todo'?`<button class="pbtn undo" data-tid="${esc(t.id)}" data-act="reset">撤销</button>`:''}
+    </div>`:'<div class="viewonly">这项任务不归你负责，只能查看。</div>'}`;
+  $$('#dbox .pbtn[data-tid]').forEach(el=>{
+    el.onclick=()=>{
+      const tid=el.dataset.tid,act=el.dataset.act;
+      const ms2=myState(tid);
+      if(act==='start')setMyState(tid,'doing');
+      else if(act==='finish')setMyState(tid,'done');
+      else if(act==='submit')setMyState(tid,undefined,!ms2.s);
+      else if(act==='reset')setMyState(tid,'todo',false);
       closeDetail();
-      const active = $('.seg button.on');
-      if(active) show(active.dataset.view);
+      const active=$('.seg button.on');if(active)show(active.dataset.view);
     };
   });
   $('#detail').classList.add('on');
 }
-function closeDetail(){ $('#detail').classList.remove('on'); }
-$('#detail').onclick = e=>{ if(e.target.id === 'detail') closeDetail(); };
-document.addEventListener('keydown', e=>{ if(e.key === 'Escape') closeDetail(); });
+function closeDetail(){$('#detail').classList.remove('on');}
+$('#detail').onclick=e=>{if(e.target.id==='detail')closeDetail();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDetail();});
 </script>
 </body>
 </html>
