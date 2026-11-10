@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src https://api.github.com https://raw.githubusercontent.com; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
 <title>班委工作看板</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -240,13 +242,9 @@ main{max-width:1440px;margin:0 auto;padding:28px 32px 80px}
     </div>
   </header>
   <main>
-    <div class="counselor-bar">
+    <div class="counselor-bar" id="counselor-bar" hidden>
       <span class="icon">👨‍🏫</span>
-      <div class="info">
-        <b>辅导员：周泽维</b>
-        　电话/微信：<a href="tel:15736152295">15736152295</a>
-        　办公地点：校团委办公大厅 · 学生资助管理中心 10 号位
-      </div>
+      <div class="info"></div>
     </div>
     <section id="v-mine"></section>
     <section id="v-all" hidden></section>
@@ -258,10 +256,12 @@ main{max-width:1440px;margin:0 auto;padding:28px 32px 80px}
 
 <div id="detail"><div class="dbox" id="dbox"></div></div>
 
-<script>window.__BLOB__ = {"salt":"k3VTxVREThkj75jJqlUHMg==","iter":200000,"slots":[{"id":"研旅261-副班长","iv":"aJHP/D0L+XrYzC32","ct":"+cblb6aDI6RB3l6GXINJTwKa9xbEVWC2E0xinaYPyyWt39Bi/BvrVNxOL7obvjzI"},{"id":"研旅261-班长/团支书","iv":"LRnvIxtyHSXcPqly","ct":"9xEfvy/hetm928FKr56YOWuCMqs1k6xav179nVQ80Q4wEUH7nbX/cjApVvhy3+Vf"},{"id":"研旅261-学习委员","iv":"pU3NTzLFMbF7gcxq","ct":"hE30x4SpHGoOil/qmvZ5c9BH7ZKYk3+aiqtCM2+oEkQsiFOBQdkrKayqG6z0zJ0U"},{"id":"研旅261-宣传委员","iv":"lY3u+wP7iBDDsXLz","ct":"tiJticiVPokZ+Nfusn8TpMS95pdvxJVD61twVtvFQzUPbG6DlLDIxCGBMlqA4dlq"},{"id":"研旅261-组织委员","iv":"6Os/OvzzV8FkKlXG","ct":"c7ATmiHNgqBbp/0Xbkspr8EeEklpgIGpOrDR4i0VbIBibXiRITPAPkLv2Hx269Ps"},{"id":"研旅261-体育委员","iv":"Nm7Bl7tzEBJ2n+ar","ct":"qfa3PNIWrxiEEYs+JiQ0rnPzIkk+5855uN1Lrh6SLTOPp0a1sXFX4UCxl41im3Bl"},{"id":"营销261-副班长","iv":"Xif0REFY+nReOxaV","ct":"meKwQxuni8IQg2dioNMtaFyAze8lyLi3ZoIRCRN8R5yEj1zHd3+v5tG7jh4beXhs"},{"id":"营销261-班长/团支书","iv":"np4+miSFo8nqx72M","ct":"aBxfIfhWRr5rlukAOE6ELal0JTboKm/WwPEcUJyNNseav+nB/nck/D1e6zIcQvUf"},{"id":"营销261-宣传委员","iv":"q3hDi6M+gl2uWySW","ct":"59/fX2XgLHPOpVgLesG8A0XtXy/z0TsF2u7Xq89GUM0NTl0NpaXFSwNlv8Q1BVND"},{"id":"营销261-组织委员","iv":"YN1dxFpcpCRaW4d7","ct":"RNMIEJTleB6ALaTc+E0NSc8OR84aLwmcte5CLX/D68lvkLB94qqhuHLO+aVHBeB5"},{"id":"营销261-学习委员","iv":"DsWdCL1jg0Lascgf","ct":"bJzM/FldcFMgXtIVjRCJU8+yZix7xeHGwojJuETZrO0wcV52VVXcit67XaFSMVar"},{"id":"营销261-体育委员","iv":"l0xayIFMDB9Knh8q","ct":"P7bibxw+5YuWuiCXeFHaAjt3tH5O0Ix9FeTDIap9Jye3WyjfNu9+O7qRv+BsYDYa"},{"id":"营销262-学习委员","iv":"bglYWra2ssuz6TGj","ct":"t8JuLgbGrCaAdlboZ9EM7eSiOL6mhKUjXDUOMCJXqWQYj/fE3PK+2PP2OtD2voRk"},{"id":"营销262-副班长","iv":"Q0+Re+iojh7W5OFg","ct":"0EE//UlRXELUM3RCsJixPykh0vPHNqYSLQkhI9OfDwcnUNKF37MzLGDWsYChBlXX"},{"id":"营销262-宣传委员","iv":"2AUA+IclnYHdnId4","ct":"0Ldg7V30XF9s99eW/dYG5ts+xS8D5H7hy6Ix20ZGzixnM6Tv83xfHi4aIW/d2ka8"},{"id":"营销262-班长/团支书","iv":"Fy7cXrrt0mucsaYD","ct":"jMhxdlGgCrd5nR04UPNzWSditp7lYcUtFl5KcPrRcVezOkxak+tdw4iSrersYaIs"},{"id":"营销262-组织委员","iv":"/TE/jA02rNIc+qnT","ct":"IgYEVDqtybLYlbR6VvqXfnVLjOlUGZ+ZfvXDscYKWOKVGI8rHMNTlW4QBRab6+bm"},{"id":"ADMIN-辅导员","iv":"HhYctFQ9y+DRwjXg","ct":"1orHFNNvt1l7jt4Zd7UQmQ/6tFDachN7326S+EnGg9GwcdKVwAgGWVyKWqx7VRpD"}],"iv":"/uzSad5z8xA7qtca","ct":"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","tokIv":"Rvj/vgt3sSl86TPo","tokCt":"8eyuY9vJEs9ACf2tusWXi5JbJrEGnW7k3lrEEOqJNMWPIM2jAvLMRbMSYhL15kVa0+5n+ss9latbOV8rwrhCBNZCKqPCUedtgLxvp4yQdexR1nf+hJrdPR9psQlJzfZtV5DK5rAOgmW9El5zkBHCd+xNOquw/NiNEA==","repo":"aot528800-hash/kanban"};</script>
+<script>window.__BLOB__ = {"v":2,"gen":"2026-11-10","salt":"m8sWRGXp8P4SbZduzB/PZQ==","iter":600000,"slots":[{"id":"研旅261-副班长","iv":"EAiRJkUsS3yXaKnE","ct":"y1GdRo4lFMCnMqjzpWepPKS6YCQdNUhPkN+ze3tDCVYlhGqFU0v53q7LNSgH7c8P"},{"id":"研旅261-班长/团支书","iv":"GLciORSmMeWo+hX2","ct":"OBJvDlZL0GnA+Jgmt8JBlNKEWsywlnqVLj4Mjoi++WKoWE5aUldnkUgEiCJFi8sZ"},{"id":"研旅261-学习委员","iv":"z7tDo28CEgjs4W6q","ct":"WTuyjXgpdzaeCeBqEn4RvQnssfxYewx736byyRUMGRHYixzGYq3ip4YauC69HxTp"},{"id":"研旅261-宣传委员","iv":"OnfneLA5mm7Q2+3Q","ct":"uUrqVR4pd75R3BXaIGcAfHzdt5aPfgn54RlKBmV1eWKxRbxUhWAhesKy+uBNlK46"},{"id":"研旅261-组织委员","iv":"Z+kBr8kQ6xUmdC9K","ct":"G6EevbPgg/3g/2CAKEhoJ6eMGyO7ovKP6RtufCd4sdTY1ZlgBy2xySwSP3lWG5N3"},{"id":"研旅261-体育委员","iv":"g65QpMInxP8j4DbC","ct":"lNY6ecmajYorUbjgpn08evjvKPviDQ22tY42IYmPzOaoeuzWfOSapSihZrrKAgFk"},{"id":"营销261-副班长","iv":"998Hf0nNka317pwh","ct":"azD4SHTabtzsYwD/HcZ37ffNySXHhuHrxPWjHcn0TGxSNJp/5eCHQ9PTNUgYyBSx"},{"id":"营销261-班长/团支书","iv":"2UEMfl4jckF5V6/W","ct":"+Di8T66sX4Oixz5g54TKST6i2BICcTFhJ+SAHryQdtYyp+vCLRfoLVmSxX3j73rh"},{"id":"营销261-宣传委员","iv":"O59YLST7pJP3qK6d","ct":"zrvKT3Q5IJLpCxzxqSVk1vHezXww57f538/tugWRrjIZWnA/mUGlhccQsfKKgCAI"},{"id":"营销261-组织委员","iv":"pZs7tS0OhHWJLqpO","ct":"aGqYA4GKEyJo8oK8t4AxH5++uNXzTlGMSB2ZeW12wTS75IDVEQiIvvLwtNJOe6MO"},{"id":"营销261-学习委员","iv":"C5oU6B3xVIOpeGH4","ct":"3YdLBkXNofwXeGgVbt11sl97txNQ2hgJh9JbAmyQPc5OU3V3YmJiv+5efZ0Rc805"},{"id":"营销261-体育委员","iv":"Ci65+CxC3KMzb02m","ct":"cOeyEUMgBtXHoGLxQ85iMjU66zCo4ObmsOXYrxC6R4dEKx9Y+e+y8FON77Zmp2VR"},{"id":"营销262-学习委员","iv":"ZuhrjesNQe3dyqG+","ct":"LmyQ6wPpMIv9At49wwdmZhrN9XGvmgymjf9eogmzrJB0zUNLuB7ZC5RpX7EufCN4"},{"id":"营销262-副班长","iv":"BF1eNDvqLXILx8YX","ct":"XGlUL2DvZmBIH+cpKyXSgL5avFtbdUIDuAKS8X1lGIuk2k83DFGwqumRSClZiToB"},{"id":"营销262-宣传委员","iv":"RxIT9DZWE/qSZ1RE","ct":"DTE5v5fu+OO6eLfm9tO7GUeRfp8Jqmo2EBFBuR2Q7AZfgseMGcAW0NCrgE8YwJLS"},{"id":"营销262-班长/团支书","iv":"p9E0+s78+1yWsPWh","ct":"7Gqgbkftc4WCXBj+j149KHmGEFdCOPhSAGlUFShHYKxNgJUljJn3pQt20EnafOi1"},{"id":"营销262-组织委员","iv":"IMAPwA2ssZBxfS+s","ct":"aLzd/aLMY7drqKyge8YgzWyAPjqmwXH04dwKrU34mIVIXso7M01Og+lBOW4Vm7Mb"},{"id":"ADMIN-辅导员","iv":"1waXfSLqRMttR/AS","ct":"s2GoqTNMhf7VGFRnE9TjRjq0r1P8w9TV+I8T1b+blToBcf1GBt8qQTU4y5OOZ2nr"}],"iv":"uWR2w6XfV5n/eKFA","ct":"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","tokIv":"tEIVXRkm4dgaCPZ+","tokCt":"Yukzlz9Ln1F9eNtkSi92VUoIhwe+rIiQ6HJoSOakS5e4PvunMhpm8ACwbm7YPtxuTvkZ419XGrMQA/Xcs0TFJKPi1OMaiNhZMWnRH3PHnnLAntqZs93XfyXzzfwhDgY8HHS6wu35nitTj4Cpgs+l4WVGUsNNAFjcaA==","repo":"aot528800-hash/kanban"};</script>
 <script>
 "use strict";
 let DATA=null,ME=null,SHARED={};
+const VALID_P=['todo','doing','done'];
+const SAVE_Q={busy:false,dirty:false,fails:0};
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -274,6 +274,8 @@ const dateRange=(s,e)=>{
   const a=new Date((s||e)+'T00:00:00'), b=new Date((e||s)+'T00:00:00');
   if(isNaN(a)||isNaN(b))return[raw];
   if(a>b)return[s||e];
+  // 防止误填超长区间导致日历渲染卡死
+  if((b-a)/86400000>400){console.warn('[KANBAN] 任务时间跨度过大，已忽略:',s,e);return[s||e];}
   const out=[]; for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1))
     out.push(`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`);
   return out;
@@ -299,16 +301,22 @@ function toast(msg,color){
 /* ===== 解密 ===== */
 async function unlock(pwd){
   const enc=new TextEncoder(),B=window.__BLOB__;
+  if(!B||!Array.isArray(B.slots)||!B.slots.length)throw new Error('bad');
+  if(!(B.iter>=100000))throw new Error('bad'); // 拒绝被篡改降级的迭代次数
   const km=await crypto.subtle.importKey('raw',enc.encode(pwd),'PBKDF2',false,['deriveKey']);
   const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64d(B.salt),iterations:B.iter,hash:'SHA-256'},
     km,{name:'AES-GCM',length:256},false,['decrypt']);
+  const A_AD=enc.encode('kanban-data-v1'),A_TK=enc.encode('kanban-pat-v1');
   for(const s of B.slots){
     try{
-      const rawK=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(s.iv)},key,b64d(s.ct));
+      // AAD 绑定账号ID：篡改 slot 的 id 会导致认证失败，防止身份冒充
+      const rawK=await crypto.subtle.decrypt(
+        {name:'AES-GCM',iv:b64d(s.iv),additionalData:enc.encode('kanban-slot-v1|'+s.id)},
+        key,b64d(s.ct));
       const k=await crypto.subtle.importKey('raw',rawK,'AES-GCM',false,['decrypt']);
-      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.iv)},k,b64d(B.ct));
+      const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.iv),additionalData:A_AD},k,b64d(B.ct));
       let tok=null;
-      if(B.tokCt){try{const tp=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.tokIv)},k,b64d(B.tokCt));tok=JSON.parse(new TextDecoder().decode(tp)).token;}catch(e){}}
+      if(B.tokCt){try{const tp=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64d(B.tokIv),additionalData:A_TK},k,b64d(B.tokCt));tok=JSON.parse(new TextDecoder().decode(tp)).token;}catch(e){}}
       return{me:s.id,data:JSON.parse(new TextDecoder().decode(pt)),token:tok,repo:B.repo};
     }catch(e){}
   }
@@ -316,50 +324,70 @@ async function unlock(pwd){
 }
 
 /* ===== 共享状态 ===== */
+const BADKEY=k=>k==='__proto__'||k==='constructor'||k==='prototype';
 async function loadShared(){
+  let ok=false;
   try{
-    const r=await fetch('https://raw.githubusercontent.com/aot528800-hash/kanban/main/state.json?t='+Date.now());
-    if(r.ok)SHARED=await r.json();else SHARED={};
+    const repo=window.__REPO__||'aot528800-hash/kanban';
+    const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),8000);
+    const r=await fetch('https://raw.githubusercontent.com/'+repo+'/main/state.json?t='+Date.now(),
+      {signal:ctl.signal,cache:'no-store'});
+    clearTimeout(tm);
+    if(r.ok){SHARED=await r.json();ok=true;}else SHARED={};
   }catch(e){SHARED={};}
-  // 清洗脏数据：把字符串等非对象值替换为标准格式
+  // 清洗：结构归零 / 状态白名单 / 阻断原型污染
+  if(!SHARED||typeof SHARED!=='object')SHARED={};
   for(const pid of Object.keys(SHARED)){
+    if(BADKEY(pid)){delete SHARED[pid];continue;}
     if(typeof SHARED[pid]!=='object'||SHARED[pid]===null){SHARED[pid]={};continue;}
     for(const tid of Object.keys(SHARED[pid])){
+      if(BADKEY(tid)){delete SHARED[pid][tid];continue;}
       const v=SHARED[pid][tid];
       if(typeof v==='string'){
         SHARED[pid][tid]={p:v==='done'?'done':v==='doing'?'doing':'todo',s:v==='submitted'};
       }else if(!v||typeof v!=='object'){
         SHARED[pid][tid]={p:'todo',s:false};
       }else{
-        if(!v.p||typeof v.p!=='string')v.p='todo';
+        if(!VALID_P.includes(v.p))v.p='todo';
         v.s=!!v.s;
       }
     }
   }
-  console.log('[KANBAN] shared state loaded, cleaned');
+  console.log('[KANBAN] shared state loaded, cleaned, ok='+ok);
+  return ok;
 }
 async function saveShared(){
   if(!window.__TOKEN__)return false;
-  const api='https://api.github.com/repos/'+window.__REPO__+'/contents/state.json';
+  const api='https://api.github.com/repos/'+(window.__REPO__||'aot528800-hash/kanban')+'/contents/state.json';
   const H={Authorization:'token '+window.__TOKEN__};
   const enc=obj=>{const b=new TextEncoder().encode(JSON.stringify(obj));let s='';for(let i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s);};
   const dec=str=>{const bin=atob(String(str||'').replace(/\s/g,''));const u=Uint8Array.from(bin,c=>c.charCodeAt(0));return JSON.parse(new TextDecoder().decode(u));};
   for(let attempt=0;attempt<4;attempt++){
     try{
       let sha=null,remote={};
-      const r=await fetch(api+'?_='+Date.now()+'_'+attempt,{headers:H});
+      const ctl=new AbortController(),tm=setTimeout(()=>ctl.abort(),12000);
+      const r=await fetch(api+'?_='+Date.now()+'_'+attempt,{headers:H,signal:ctl.signal,cache:'no-store'});
+      clearTimeout(tm);
       if(r.ok){
         const j=await r.json();
         sha=j.sha;
         try{remote=dec(j.content)||{};}catch(e){remote={};}
+      }else if(r.status===401||r.status===403){
+        console.error('[KANBAN] 云端写入权限失效 status='+r.status);
+        return false; // 权限问题重试无用，立即失败
       }else if(r.status!==404){
         await new Promise(x=>setTimeout(x,300*(attempt+1)));continue;
       }
-      // 关键：其他人的状态以远端为准（避免覆盖别人刚提交的），只写自己那份
-      const merged={};
-      for(const k in remote)merged[k]=remote[k];
-      if(ME&&SHARED[ME])merged[ME]=SHARED[ME];
-      else for(const k in SHARED)if(!merged[k])merged[k]=SHARED[k];
+      if(!remote||typeof remote!=='object')remote={};
+      const merged=Object.create(null);
+      for(const k of Object.keys(remote))if(!BADKEY(k))merged[k]=remote[k];
+      if(ME&&SHARED[ME]){
+        // 按任务合并：远端别人/别的设备的新数据保留，本地自己的改动优先
+        const base=(merged[ME]&&typeof merged[ME]==='object')?merged[ME]:{};
+        merged[ME]=Object.assign({},base,SHARED[ME]);
+      }else{
+        for(const k of Object.keys(SHARED))if(!BADKEY(k)&&!merged[k])merged[k]=SHARED[k];
+      }
       SHARED=merged;
       const body={message:'update state',content:enc(merged)};
       if(sha)body.sha=sha;
@@ -368,9 +396,10 @@ async function saveShared(){
         body:JSON.stringify(body)});
       if(r2.ok)return true;
       // 409/422 = 有人抢先保存了，重新读再试
-      if(r2.status===409||r2.status===422||r2.status===401){
+      if(r2.status===409||r2.status===422){
         await new Promise(x=>setTimeout(x,250*(attempt+1)));continue;
       }
+      console.error('[KANBAN] 保存失败 status='+r2.status);
       return false;
     }catch(e){
       await new Promise(x=>setTimeout(x,300*(attempt+1)));
@@ -378,38 +407,101 @@ async function saveShared(){
   }
   return false;
 }
-function myState(tid){
-  const s=SHARED[ME]||{};
-  const st=s[tid];
-  if(!st||typeof st!=='object')return{p:'todo',s:false};
-  return{p:st.p||'todo',s:!!st.s};
+// 串行队列：避免快速连点造成多次并发写、互相覆盖
+function saveSharedQueued(){
+  if(!window.__TOKEN__)return;
+  if(SAVE_Q.busy){SAVE_Q.dirty=true;return;}
+  SAVE_Q.busy=true;
+  saveShared().then(ok=>{
+    if(!ok){
+      SAVE_Q.fails++;
+      if(SAVE_Q.fails<=2)toast('⚠️ 进度未能保存到云端，正在重试','var(--err)');
+      SAVE_Q.dirty=true;
+    }else{SAVE_Q.fails=0;}
+  }).catch(()=>{SAVE_Q.dirty=true;}).then(()=>{
+    SAVE_Q.busy=false;
+    if(SAVE_Q.dirty){SAVE_Q.dirty=false;setTimeout(saveSharedQueued,700);}
+  });
 }
+function myState(tid){return stateOf(ME,tid);}
 function setMyState(tid,progress,submitted){
   if(!ME){console.error('[KANBAN] ME is null');return;}
   if(!SHARED[ME])SHARED[ME]={};
   let cur=SHARED[ME][tid];
   if(!cur||typeof cur!=='object')cur={p:'todo',s:false};
-  if(progress!==undefined)cur.p=progress;
-  if(submitted!==undefined)cur.s=submitted;
+  if(!VALID_P.includes(cur.p))cur.p='todo';
+  if(progress!==undefined){
+    if(!VALID_P.includes(progress)){console.error('[KANBAN] 非法状态',progress);return;}
+    cur.p=progress;
+  }
+  if(submitted!==undefined){
+    // 业务约束：未完成的任务不允许标记为「已提交辅导员」（撤销提交不受限）
+    if(submitted===true&&cur.p!=='done'){
+      toast('请先点「✓ 完成了」再提交辅导员','var(--err)');
+      return;
+    }
+    cur.s=!!submitted;
+  }
   SHARED[ME][tid]=cur;
-  console.log('[KANBAN] state updated',ME,tid,JSON.stringify(cur));
-  saveShared();
+  saveSharedQueued();
 }
 function sharedStats(tid,task){
-  const assigned=(DATA.people||[]).filter(p=>{
-    if(!task||!task.roles)return true;
-    return task.roles.includes('全体')||task.roles.includes(p.role);
+  const assigned=assigneesOf(task);
+  let done=0,doing=0,submitted=0;
+  assigned.forEach(p=>{
+    const ms=stateOf(p.id,tid);
+    if(ms.s)submitted++;
+    if(isFullyDoneOf(p.id,task))done++;
+    else if(ms.p==='done'||ms.p==='doing')doing++;
   });
-  const ids=new Set(assigned.map(p=>p.id));
-  const entries=Object.entries(SHARED).filter(([id])=>ids.has(id)&&typeof SHARED[id]==='object');
-  const done=entries.filter(([,p])=>{const st=p[tid];return st&&typeof st==='object'&&st.p==='done';}).length;
-  const doing=entries.filter(([,p])=>{const st=p[tid];return st&&typeof st==='object'&&st.p==='doing';}).length;
-  return{done,doing,total:assigned.length};
+  return{done,doing,total:assigned.length,submitted};
 }
 
 /* ===== 工具 ===== */
 function personOf(id){return(DATA.people||[]).find(p=>p.id===id);}
 function myRole(){const p=personOf(ME);return p?p.role:'';}
+function isAdmin(){return myRole()==='辅导员';}
+// 责任人集合：排除辅导员，包含总负责人；所有统计/分母统一走这里
+function assigneesOf(t){
+  const roles=(t&&t.roles)||[];
+  return(DATA.people||[]).filter(p=>{
+    if(p.role==='辅导员')return false;
+    if(t&&t.lead&&t.lead===p.id)return true;
+    if(roles.includes('全体'))return true;
+    return roles.includes(p.role);
+  });
+}
+// 某人某任务的规范状态（非法值一律归一到 todo，避免出现「没有任何按钮」的死状态）
+function stateOf(pid,tid){
+  const s=SHARED[pid];
+  if(!s||typeof s!=='object')return{p:'todo',s:false};
+  const st=s[tid];
+  if(!st||typeof st!=='object')return{p:'todo',s:false};
+  return{p:VALID_P.includes(st.p)?st.p:'todo',s:!!st.s};
+}
+// 某人对某任务是否真正完成（需提交的任务必须既完成又提交）
+function isFullyDoneOf(pid,t){
+  const ms=stateOf(pid,t.id);
+  if(ms.p!=='done')return false;
+  if(t.needs_submit&&!ms.s)return false;
+  return true;
+}
+function leadName(t){
+  if(!t||!t.lead)return'';
+  const p=personOf(t.lead);
+  return p?(p.name?p.name+'（'+p.class+'·'+p.role+'）':t.lead):t.lead;
+}
+// 辅导员联系方式从加密数据里取，模板不再硬编码任何真实手机号
+function renderCounselor(){
+  const c=(DATA&&DATA.counselor)||{};
+  const bar=$('#counselor-bar');
+  if(!bar)return;
+  if(!c.name&&!c.phone){bar.hidden=true;return;}
+  bar.hidden=false;
+  bar.querySelector('.info').innerHTML='<b>辅导员：'+esc(c.name||'—')+'</b>'
+    +(c.phone?'　电话/微信：<a href="tel:'+esc(c.phone)+'">'+esc(c.phone)+'</a>':'')
+    +(c.office?'　办公地点：'+esc(c.office):'');
+}
 function roleLabel(t){
   if(t.lead) return t.lead;
   if(t.roles.includes('全体'))return'全体班委';
@@ -420,17 +512,13 @@ function roleLabel(t){
   }).join('、');
 }
 function isMine(t){
-  if(ME==='ADMIN-辅导员')return false; // 辅导员只看总看板，不领任务
-  if(t.lead && t.lead === ME) return true;
-  if(t.roles.includes('全体'))return true;
-  return t.roles.includes(myRole());
+  if(isAdmin())return false; // 辅导员只看总看板，不领任务
+  const roles=(t&&t.roles)||[];
+  if(t&&t.lead&&t.lead===ME)return true;
+  if(roles.includes('全体'))return true;
+  return roles.includes(myRole());
 }
-function isFullyDone(t){
-  const ms=myState(t.id);
-  if(ms.p!=='done')return false;
-  if(t.needs_submit&&!ms.s)return false;
-  return true;
-}
+function isFullyDone(t){return isFullyDoneOf(ME,t);}
 function getProgress(t){
   const ms=myState(t.id);
   if(isFullyDone(t))return'done';
@@ -440,13 +528,18 @@ function getProgress(t){
 
 /* ===== 路由 ===== */
 function show(v){
+  if(v==='admin'&&!isAdmin()){toast('无权访问总看板','var(--err)');v='mine';}
   ['mine','all','cal','duty','admin'].forEach(x=>{const el=$('#v-'+x);if(el)el.hidden=x!==v;});
   $$('.seg button').forEach(b=>b.classList.toggle('on',b.dataset.view===v));
   if(v==='mine')renderMine();
   if(v==='all')renderAll();
   if(v==='cal')renderCal();
   if(v==='duty')renderDuty();
-  if(v==='admin')renderAdmin();
+  if(v==='admin'){
+    // 每次进入总看板都重新拉一次最新进度，避免看到登录瞬间的旧快照
+    loadShared().then(()=>{if(ME&&isAdmin())renderAdmin();});
+    renderAdmin();
+  }
   window.scrollTo(0,0);
 }
 $$('.seg button').forEach(b=>b.onclick=()=>show(b.dataset.view));
@@ -460,11 +553,13 @@ $('#btn-unlock').onclick=async()=>{
   try{
     const r=await unlock(pwd);
     ME=r.me;DATA=r.data;window.__TOKEN__=r.token;window.__REPO__=r.repo||'aot528800-hash/kanban';
-    await loadShared();
+    const okSync=await loadShared();
     $('#gate').style.display='none';$('#app').hidden=false;
     const p=personOf(ME);
     $('#who-txt').innerHTML=p?`<b>${esc(p.name||p.role)}</b> ${esc(p.class)}·${esc(p.role)}${p.sid?' · 学号 '+esc(p.sid):''}${p.phone?' · '+esc(p.phone):''}`:esc(ME);
-    if(ME==='ADMIN-辅导员'){
+    renderCounselor();
+    if(!okSync)setTimeout(()=>toast('⚠️ 未连上同步服务，进度可能不是最新','var(--err)'),900);
+    if(isAdmin()){
       $('#btn-admin').style.display='';
       show('admin');
     } else {
@@ -487,11 +582,11 @@ function renderMine(){
   $('#v-mine').innerHTML=`
     <div class="page-head"><h1>我的任务</h1>
       <p>${(()=>{const p=personOf(ME);const parts=[];
-        if(p&&p.name)parts.push(p.name);
-        if(p&&p.class)parts.push(p.class);
-        if(p&&p.role)parts.push('岗位「'+p.role+'」');
-        if(p&&p.sid)parts.push('学号 '+p.sid);
-        if(p&&p.phone)parts.push('手机 '+p.phone);
+        if(p&&p.name)parts.push(esc(p.name));
+        if(p&&p.class)parts.push(esc(p.class));
+        if(p&&p.role)parts.push('岗位「'+esc(p.role)+'」');
+        if(p&&p.sid)parts.push('学号 '+esc(p.sid));
+        if(p&&p.phone)parts.push('手机 '+esc(p.phone));
         parts.push('共 '+mine.length+' 项');
         return parts.join(' · ');})()}</p></div>
     <div class="stat-row">
@@ -547,7 +642,7 @@ function taskCard(t,showCtrl){
       ${ms.p==='doing'?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
       ${ms.p==='done'&&!fullyDone?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
       ${fullyDone?`<button class="pbtn done" disabled>✓ 已完成</button>`:''}
-      ${t.needs_submit?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
+      ${(t.needs_submit&&(ms.p==='done'||ms.s))?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
       ${ms.p!=='todo'?`<button class="pbtn undo" data-tid="${esc(t.id)}" data-act="reset">撤销</button>`:''}
     </div>`:''}
   </div>`;
@@ -988,31 +1083,40 @@ function renderAdmin(){
   const tasks=DATA.tasks||[];
   const people=DATA.people||[];
   
-  // 统计
+  // 统计（按全体责任人聚合，不是登录者自己的进度）
   const totalTasks=tasks.length;
   const taskStatus={待办:0,进行中:0,已完成:0};
+  const assignCache={};
+  tasks.forEach(t=>{assignCache[t.id]=assigneesOf(t);});
+  const progOf=(pid,t)=>({
+    full:isFullyDoneOf(pid,t),
+    active:(()=>{const ms=stateOf(pid,t.id);return ms.p==='done'||ms.p==='doing';})(),
+    pendingSubmit:(()=>{const ms=stateOf(pid,t.id);return ms.p==='done'&&!isFullyDoneOf(pid,t);})()
+  });
   tasks.forEach(t=>{
-    const prog=getProgress(t);
-    if(prog==='done')taskStatus['已完成']++;
-    else if(prog==='doing')taskStatus['进行中']++;
+    const as=assignCache[t.id];
+    if(!as.length){taskStatus['待办']++;return;}
+    const doneN=as.filter(p=>progOf(p.id,t).full).length;
+    const actN=as.filter(p=>progOf(p.id,t).active).length;
+    if(doneN===as.length)taskStatus['已完成']++;
+    else if(doneN>0||actN>0)taskStatus['进行中']++;
     else taskStatus['待办']++;
   });
 
   // 每个任务的完成情况
   const taskProgress=tasks.map(t=>{
-    const assigned=people.filter(p=>{
-      return t.roles.includes('全体')||t.roles.includes(p.role)||(t.lead&&t.lead===p.id);
-    });
-    const done=assigned.filter(p=>{const st=SHARED[p.id]&&SHARED[p.id][t.id];return st&&typeof st==='object'&&st.p==='done';}).length;
-    const doing=assigned.filter(p=>{const st=SHARED[p.id]&&SHARED[p.id][t.id];return st&&typeof st==='object'&&st.p==='doing';}).length;
-    return{task:t,assigned:assigned.length,done,doing};
+    const assigned=assignCache[t.id];
+    const done=assigned.filter(p=>progOf(p.id,t).full).length;
+    const doing=assigned.filter(p=>{const r=progOf(p.id,t);return !r.full&&r.active;}).length;
+    const pending=assigned.filter(p=>progOf(p.id,t).pendingSubmit).length;
+    return{task:t,assigned:assigned.length,done,doing,pending};
   });
 
   // 每个班委的任务情况
   const peopleProgress=people.filter(p=>p.role!=='辅导员').map(p=>{
-    const myTasks=tasks.filter(t=>t.roles.includes('全体')||t.roles.includes(p.role)||(t.lead&&t.lead===p.id));
-    const done=myTasks.filter(t=>{const st=SHARED[p.id]&&SHARED[p.id][t.id];return st&&typeof st==='object'&&st.p==='done';}).length;
-    const doing=myTasks.filter(t=>{const st=SHARED[p.id]&&SHARED[p.id][t.id];return st&&typeof st==='object'&&st.p==='doing';}).length;
+    const myTasks=tasks.filter(t=>assignCache[t.id].some(a=>a.id===p.id));
+    const done=myTasks.filter(t=>isFullyDoneOf(p.id,t)).length;
+    const doing=myTasks.filter(t=>{const ms=stateOf(p.id,t.id);return !isFullyDoneOf(p.id,t)&&(ms.p==='done'||ms.p==='doing');}).length;
     return{person:p,total:myTasks.length,done,doing,todo:myTasks.length-done-doing};
   }).sort((a,b)=>a.done-b.done);
 
@@ -1032,7 +1136,7 @@ function renderAdmin(){
     <div class="tablecard"><div class="table-wrap"><table>
       <thead><tr>
         <th>任务</th><th>优先级</th><th>截止</th><th>负责人</th>
-        <th>完成</th><th>进行中</th><th>进度</th>
+        <th>完成</th><th>进行中</th><th>待提交</th><th>进度</th>
       </tr></thead>
       <tbody>${taskProgress.map(x=>`
         <tr>
@@ -1042,6 +1146,7 @@ function renderAdmin(){
           <td style="font-size:13px">${esc(x.task.lead||roleLabel(x.task))}</td>
           <td style="font-weight:700;color:var(--ok)">${x.done}/${x.assigned}</td>
           <td style="color:var(--blue)">${x.doing}</td>
+          <td style="color:${x.pending?'#C0392B':'var(--text3)'};font-weight:${x.pending?'700':'400'}">${x.pending}</td>
           <td>
             <div style="background:#EDEDE8;border-radius:6px;height:8px;width:100px;overflow:hidden">
               <div style="background:var(--ok);height:100%;width:${x.assigned?Math.round(x.done/x.assigned*100):0}%;border-radius:6px"></div>
@@ -1088,13 +1193,16 @@ function renderAdmin(){
 function renderRoleCards(people,tasks){
   const roles={};
   people.forEach(p=>{
+    if(p.role==='辅导员')return; // 辅导员不领任务，不计入岗位统计
     if(!roles[p.role])roles[p.role]={total:0,done:0,doing:0};
-    const myTasks=tasks.filter(t=>t.roles.includes('全体')||t.roles.includes(p.role)||(t.lead&&t.lead===p.id));
+    const myTasks=tasks.filter(t=>{
+      const rs=(t&&t.roles)||[];
+      return (t&&t.lead&&t.lead===p.id)||rs.includes('全体')||rs.includes(p.role);
+    });
     myTasks.forEach(t=>{
       roles[p.role].total++;
-      const st=SHARED[p.id]&&SHARED[p.id][t.id];
-      if(st&&typeof st==='object'&&st.p==='done')roles[p.role].done++;
-      else if(st&&typeof st==='object'&&st.p==='doing')roles[p.role].doing++;
+      if(isFullyDoneOf(p.id,t)){roles[p.role].done++;}
+      else{const ms=stateOf(p.id,t.id);if(ms.p==='done'||ms.p==='doing')roles[p.role].doing++;}
     });
   });
   return Object.entries(roles).map(([role,stat])=>{
@@ -1218,7 +1326,7 @@ function openDetail(id){
       <div style="font-size:14px;line-height:1.8;color:var(--text2)">${esc(t.ai_tip)}</div>
     </div>`:''}
     ${t.lead?`<div style="margin-top:10px;padding:12px 16px;background:#F7F9F4;border-radius:10px;font-size:13px;color:var(--text2)">
-      👤 <b>总负责人：</b>${esc(t.lead)}${t.lead.includes('-')?'':`（${esc(roleLabel(t))}）`}
+      👤 <b>总负责人：</b>${esc(leadName(t))}
       　辅导员只联系这个人
     </div>`:''}
     ${sc.done+sc.doing>0?`<div class="dfield"><div class="dk">进度</div><div class="dv">
@@ -1228,7 +1336,7 @@ function openDetail(id){
       ${ms.p==='doing'?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
       ${ms.p==='done'&&!isFullyDone(t)?`<button class="pbtn done" data-tid="${esc(t.id)}" data-act="finish">✓ 完成了</button>`:''}
       ${isFullyDone(t)?`<button class="pbtn done" disabled>✓ 已完成</button>`:''}
-      ${t.needs_submit?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
+      ${(t.needs_submit&&(ms.p==='done'||ms.s))?`<button class="pbtn submit ${ms.s?'done':''}" data-tid="${esc(t.id)}" data-act="submit">${ms.s?'✓ 已提交辅导员':'提交辅导员'}</button>`:''}
       ${ms.p!=='todo'?`<button class="pbtn undo" data-tid="${esc(t.id)}" data-act="reset">撤销</button>`:''}
     </div>`:'<div class="viewonly">这项任务不归你负责，只能查看。</div>'}`;
   $$('#dbox .pbtn[data-tid]').forEach(el=>{
